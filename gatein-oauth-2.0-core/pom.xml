@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>cz.muni.fi.sdipr</groupId>
+  <artifactId>gatein-oauth-2.0-core</artifactId>
+  <version>1.0-alpha</version>
+  <packaging>jar</packaging>
+
+  <name>GateIn OAuth 2.0 core</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <!-- GateIn Bill of Materials (BOM) version -->
+    <org.jboss.bom.gatein-bom.version>1.0.0.Final</org.jboss.bom.gatein-bom.version>
+        
+    <!-- Plugin versions and settings -->
+    <jboss.as.plugin.version>7.1.1.Final</jboss.as.plugin.version>
+    <!-- maven-compiler-plugin -->
+    <maven.compiler.plugin.version>2.5.1</maven.compiler.plugin.version>
+    <maven.compiler.target>1.6</maven.compiler.target>
+    <maven.compiler.source>1.6</maven.compiler.source>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  
+  <dependencies>    
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.webui.portal</artifactId>
+      <version>3.4.0.Final</version>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
+    
+    <!-- non-provided dependencies -->
+    <dependency>
+      <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client</artifactId>
+      <version>1.14.1-beta</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client-appengine</artifactId>
+      <version>1.14.1-beta</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>javax.enterprise</groupId>
+      <artifactId>cdi-api</artifactId>
+      <version>1.1.EDR1.2</version>
+      <type>jar</type>
+    </dependency>
+  </dependencies>
+  
+  <repositories>
+    <repository>
+      <id>EXOPLATFORM</id>
+      <url>http://maven2.exoplatform.org/rest/maven2</url>
+    </repository>
+  </repositories>
+</project>
