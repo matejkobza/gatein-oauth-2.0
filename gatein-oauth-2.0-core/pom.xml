@@ -11,11 +11,6 @@
   <url>http://maven.apache.org</url>
 
   <properties>
-    <!-- GateIn Bill of Materials (BOM) version -->
-    <org.jboss.bom.gatein-bom.version>1.0.0.Final</org.jboss.bom.gatein-bom.version>
-        
-    <!-- Plugin versions and settings -->
-    <jboss.as.plugin.version>7.1.1.Final</jboss.as.plugin.version>
     <!-- maven-compiler-plugin -->
     <maven.compiler.plugin.version>2.5.1</maven.compiler.plugin.version>
     <maven.compiler.target>1.6</maven.compiler.target>
