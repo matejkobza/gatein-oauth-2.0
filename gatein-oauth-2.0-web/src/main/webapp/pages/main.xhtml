@@ -1,0 +1,69 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:a4j="http://richfaces.org/a4j"
+        xmlns:rich="http://richfaces.org/rich">
+  <h:head/>
+  <h:body>
+    <h:outputStylesheet library="css" name="google-oauth-portlets.css"/>
+    <h:outputStylesheet library="css" name="zocial.css"/>
+    <h:panelGrid cellpadding="10">
+      <h:form>
+        <rich:panel rendered="#{googlePlusBean.isAuthenticated}" styleClass="container plus-home">
+          <h2><h:outputText value="#{res['cz.muni.fi.sdipr.google.plus.title']}"/></h2>
+          <h:panelGrid columns="2" styleClass="float-left">
+            <h:outputText value="#{res['cz.muni.fi.sdipr.google.plus.displayName']}"/>
+            <h:outputText value="#{googlePlusBean.profile.displayName}"/>
+
+            <h:outputText value="#{res['cz.muni.fi.sdipr.google.plus.email']}"/>
+            <h:outputText value="#{googlePlusBean.profile.emails[0]}"/>
+
+          </h:panelGrid>
+          <h:graphicImage url="#{googlePlusBean.profile.image.url}"
+                          alt="#{googlePlusBean.profile.displayName}"
+                          styleClass="float-left"/>
+          <rich:panel styleClass="clear"/>
+        </rich:panel>
+        <rich:panel styleClass="container">
+          <h:commandLink actionListener="#{googlePlusBean.requestAccessToken}"
+                         value="#{res['cz.muni.fi.sdipr.google.plus.login']}"
+                         rendered="#{!googlePlusBean.isAuthenticated}"
+                         styleClass="zocial googleplus">
+            <f:param name="javax.portlet.faces.DirectLink" value="true"/>
+          </h:commandLink>
+        </rich:panel>
+
+        <rich:panel rendered="#{googleDriveBean.isAuthenticated}">
+          <h:outputText value="#{res['cz.muni.fi.sdipr.google.drive.files']}" />
+          <rich:dataTable value="#{googleDriveBean.files}" var="file">
+            <rich:column>
+              <h:graphicImage value="#{file.iconLink}" alt="#{file.originalFilename}" />
+            </rich:column>
+            <rich:column>
+              <f:facet name="header">
+                <h:outputText value="#{res['cz.muni.fi.sdipr.google.drive.fileName']}" />
+              </f:facet>
+              <a4j:commandLink action="#{googleDriveBean.downloadFile(file)}" value="#{file.title}" title="#{res['cz.muni.fi.sdipr.google.drive.downloadFile']}" />
+            </rich:column>
+            <rich:column>
+              <f:facet name="header">
+                <h:outputText value="#{res['cz.muni.fi.sdipr.google.drive.fileSize']}" />
+              </f:facet>
+              <h:outputText value="#{file.fileSize}" />
+            </rich:column>
+          </rich:dataTable>
+        </rich:panel>
+
+        <rich:panel styleClass="container" rendered="#{!googleDriveBean.isAuthenticated}">
+          <h:commandLink actionListener="#{googleDriveBean.requestAccessToken}"
+                         value="#{res['cz.muni.fi.sdipr.google.drive.login']}"
+                         rendered="#{!googleDriveBean.isAuthenticated}"
+                         styleClass="zocial google">
+            <f:param name="javax.portlet.faces.DirectLink" value="true"/>
+          </h:commandLink>
+        </rich:panel>
+      </h:form>
+
+    </h:panelGrid>
+  </h:body>
+</f:view>
