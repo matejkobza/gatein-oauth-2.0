@@ -1,39 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>gatein-oauth-2.0-portlets</artifactId>
+    <artifactId>oauth-2-gtn-web</artifactId>
     <groupId>cz.muni.fi.sdipr</groupId>
-    <name>GateIn OAuth 2.0 Portlets</name>
-    <version>3.5.0.Final</version>
     <packaging>war</packaging>
-    <description>Login to facebook and google plus.
+    <name>GateIn OAuth 2.0 web</name>
 
-A simple portlet using JavaServer Faces 2.1 and RichFaces 4.2.
-    </description>
-    <url>http://www.gatein.org</url>
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <distribution>repo</distribution>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
-        </license>
-    </licenses>
-
-    <properties>
-        <!-- GateIn Bill of Materials (BOM) version -->
-        <org.jboss.bom.gatein-bom.version>1.0.0.Final</org.jboss.bom.gatein-bom.version>
-
-        <!-- Plugin versions and settings -->
-        <jboss.as.plugin.version>7.1.1.Final</jboss.as.plugin.version>
-        <!-- maven-compiler-plugin -->
-        <maven.compiler.plugin.version>2.5.1</maven.compiler.plugin.version>
-        <maven.compiler.target>1.6</maven.compiler.target>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <parent>
+    	<groupId>cz.muni.fi.sdipr</groupId>
+    	<artifactId>oauth-2-gtn-demo</artifactId>
+    	<version>1.0.0-snapshot</version>
+    </parent>
 
     <dependencyManagement>
         <dependencies>
@@ -60,18 +39,21 @@ A simple portlet using JavaServer Faces 2.1 and RichFaces 4.2.
             Name only those artifacts you refer to in your code.
             Look at gatein-*-bom POM file for the complete list of available artifacts.
         -->
-        <!-- General JSF dependencies -->
+        <!-- General JSF dependencies for portlet development -->
         <dependency>
             <groupId>org.jboss.spec.javax.faces</groupId>
             <artifactId>jboss-jsf-api_2.1_spec</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.jboss.portletbridge</groupId>
             <artifactId>portletbridge-api</artifactId>
+            <scope>provided</scope>
         </dependency>
+        <!-- End general JSF dependency -->
 
         <!-- RF-sprecific dependencies -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.jboss.portletbridge</groupId>
             <artifactId>portletbridge-extension-richfaces</artifactId>
             <scope>provided</scope>
@@ -87,7 +69,7 @@ A simple portlet using JavaServer Faces 2.1 and RichFaces 4.2.
         <dependency>
             <groupId>org.richfaces.core</groupId>
             <artifactId>richfaces-core-impl</artifactId>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>com.google.apis</groupId>
@@ -102,22 +84,22 @@ A simple portlet using JavaServer Faces 2.1 and RichFaces 4.2.
         </dependency>
 
         <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1.0-PFD-1</version>
-            <type>jar</type>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <version>1.0-SP4</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>cz.muni.fi.sdipr</groupId>
-            <artifactId>gatein-oauth-2.0-core</artifactId>
-            <version>1.0-alpha</version>
+            <artifactId>oauth-2-gtn-core</artifactId>
+            <version>1.0.0-snapshot</version>
         </dependency>
     </dependencies>
 
 
     <build>
-        <finalName>${project.artifactId}</finalName>
+        <finalName>${project.artifactId}-${project.parent.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.jboss.as.plugins</groupId>
@@ -135,22 +117,5 @@ A simple portlet using JavaServer Faces 2.1 and RichFaces 4.2.
             </plugin>
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>JBOSS-developer</id>
-            <url>https://repository.jboss.org/nexus/content/groups/developer/</url>
-        </repository>
-
-        <repository>
-            <id>EXOPLATFORM</id>
-            <url>http://maven2.exoplatform.org/rest/maven2</url>
-        </repository>
-
-        <repository>
-            <id>google-api-services</id>
-            <url>http://google-api-client-libraries.appspot.com/mavenrepo</url>
-        </repository>
-    </repositories>
 
 </project>

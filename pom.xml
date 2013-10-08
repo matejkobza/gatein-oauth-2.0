@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>oauth-2-gtn-demo</artifactId>
+    <groupId>cz.muni.fi.sdipr</groupId>
+    <packaging>pom</packaging>
+    <name>GateIn OAuth 2.0 Demo</name>
+
+    <version>1.0.0-snapshot</version>
+
+    <description>Login to facebook and google plus.
+
+        A simple portlet using JavaServer Faces 2.1 and PrimeFaces.
+    </description>
+    <url>http://www.gatein.org</url>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <distribution>repo</distribution>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+        </license>
+    </licenses>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
+        <maven.compiler.plugin.version>2.5.1</maven.compiler.plugin.version>
+        <!-- GateIn Bill of Materials (BOM) version -->
+        <org.jboss.bom.gatein-bom.version>1.0.0.Final</org.jboss.bom.gatein-bom.version>
+        <!-- Plugin versions and settings -->
+        <jboss.as.plugin.version>7.1.1.Final</jboss.as.plugin.version>
+    </properties>
+
+    <modules>
+        <module>gatein-oauth-2.0-core</module>
+        <module>gatein-oauth-2.0-web</module>
+    </modules>
+
+    <repositories>
+        <repository>
+            <id>repository.jboss.org-public</id>
+            <name>JBoss repository</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>prime-repo</id>
+            <name>PrimeFaces Maven Repository</name>
+            <url>http://repository.primefaces.org</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>JBOSS-developer</id>
+            <url>https://repository.jboss.org/nexus/content/groups/developer/</url>
+        </repository>
+        <repository>
+            <id>EXOPLATFORM</id>
+            <url>http://maven2.exoplatform.org/rest/maven2</url>
+        </repository>
+        <repository>
+            <id>google-api-services</id>
+            <url>https://google-api-client-libraries.appspot.com/mavenrepo</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>http://repo1.maven.org/maven2/</url>
+        </repository>
+    </repositories>
+
+</project>
