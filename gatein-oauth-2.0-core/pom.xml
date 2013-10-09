@@ -26,22 +26,6 @@
         </dependency>
         <!-- end dependency for redirect -->
 
-        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <version>1.0-SP4</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- non-provided dependencies -->
-
-        <dependency>
-            <groupId>com.google.api-client</groupId>
-            <artifactId>google-api-client</artifactId>
-            <version>1.17.0-rc</version>
-        </dependency>
-
-
     </dependencies>
 
     <build>

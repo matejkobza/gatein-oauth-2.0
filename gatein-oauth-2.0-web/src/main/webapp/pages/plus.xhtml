@@ -1,0 +1,38 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <h:head/>
+    <h:body>
+        <h:outputStylesheet library="css" name="google-oauth-portlets.css"/>
+        <h:outputStylesheet library="css" name="zocial.css"/>
+        <h:panelGrid cellpadding="10">
+          <h:form>
+            <h:panelGroup rendered="#{googlePlusBean.isAuthenticated}" styleClass="container plus-home">
+              <h2><h:outputText value="#{res['cz.muni.fi.sdipr.google.plus.title']}"/></h2>
+              <h:panelGrid columns="2" styleClass="float-left">
+                <h:outputText value="#{res['cz.muni.fi.sdipr.google.plus.displayName']}"/>
+                <h:outputText value="#{googlePlusBean.profile.displayName}"/>
+
+                <h:outputText value="#{res['cz.muni.fi.sdipr.google.plus.email']}"/>
+                <h:outputText value="#{googlePlusBean.profile.emails[0]}"/>
+
+              </h:panelGrid>
+              <h:graphicImage url="#{googlePlusBean.profile.image.url}"
+                              alt="#{googlePlusBean.profile.displayName}"
+                              styleClass="float-left"/>
+              <h:panelGroup styleClass="clear"/>
+            </h:panelGroup>
+
+            <h:panelGroup styleClass="container">
+              <h:commandLink actionListener="#{googleLoginBean.requestAccessToken}"
+                             value="#{res['cz.muni.fi.sdipr.google.plus.login']}"
+                             rendered="#{!googlePlusBean.isAuthenticated}"
+                             styleClass="zocial googleplus">
+                <f:param name="javax.portlet.faces.DirectLink" value="true"/>
+              </h:commandLink>
+            </h:panelGroup>
+          </h:form>
+
+        </h:panelGrid>
+    </h:body>
+</f:view>
