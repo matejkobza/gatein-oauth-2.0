@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+    <title>Google OAuth 2 Demo</title>
+</h:head>
+<h:body>
+    <h1>Google OAuth 2 Demo</h1>
+    <h:form>
+        <h:commandButton actionListener="#{googleLoginBean.doRedirect}"
+                         rendered="#{!googleLoginBean.authenticated}"
+                         value="Login"/>
+    </h:form>
+
+    <h:panelGrid rendered="#{googleLoginBean.authenticated}">
+        <h:outputText value="#{googleLoginBean.profile.displayName}" />
+        <h:outputText value="#{googleLoginBean.profile.nickname}" />
+        Here should be some text about me: <h:outputText value="#{googleLoginBean.profile.aboutMe}" />
+    </h:panelGrid>
+</h:body>
+</html>

@@ -1,6 +1,11 @@
 package cz.muni.fi.sdipr.web;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.plus.Plus;
 import com.google.api.services.plus.PlusScopes;
 import com.google.api.services.plus.model.Person;
 import cz.muni.fi.sdipr.core.GoogleLoginBean;
@@ -9,6 +14,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -20,7 +26,7 @@ import java.util.Arrays;
 public class GooglePlusBean implements Serializable, OAuthAbstractBean {
 
     private static final long serialVersionUID = 4317642879328909566L;
-//    private static Log log = LogFactory.getLog(GooglePlusBean.class);
+    //    private static Log log = LogFactory.getLog(GooglePlusBean.class);
     Person profile = null;
 
     private GoogleCredential credential;
@@ -41,29 +47,27 @@ public class GooglePlusBean implements Serializable, OAuthAbstractBean {
 
     public void loadProfile() {
         if (credential == null) {
-//            credential = loginBean.getCredential();
+            credential = loginBean.getCredential();
         }
 
         if (credential == null) {
-//            loginBean.requestAccessToken();
+            loginBean.requestAccessToken();
         }
 
         if (credential != null) {
-//            HttpTransport httpTransport = new NetHttpTransport();
-//            JacksonFactory jsonFactory = new JacksonFactory();
-
-//            Plus plus = new Plus.Builder(httpTransport, jsonFactory, credential)
-//                    .setApplicationName(APPLICATION_NAME)
-//                    .build();
-//            try {
-//                try {
-//                    profile = plus.people().get("me").execute();
-//                } catch (GoogleJsonResponseException ex) {
-//                    log.info("User is not authenticated to Google Plus", ex);
-//                }
-//            } catch (IOException ex) {
-//                log.error("loadProfile", ex);
-//            }
+            Plus plus = new Plus.Builder(new NetHttpTransport(), new JacksonFactory(), credential)
+                    .setApplicationName(APPLICATION_NAME)
+                    .setHttpRequestInitializer(credential)
+                    .build();
+            try {
+                try {
+                    profile = plus.people().get("me").execute();
+                } catch (GoogleJsonResponseException ex) {
+                    System.out.println("User is not authenticated to Google Plus");
+                }
+            } catch (IOException ex) {
+                System.out.println("loadProfile");
+            }
         }
     }
 
@@ -73,10 +77,10 @@ public class GooglePlusBean implements Serializable, OAuthAbstractBean {
 
     @Override
     public Boolean getIsAuthenticated() {
-        return loginBean.getCredential() != null;
-//        if (profile == null) {
-//            this.loadProfile();
-//        }
-//        return profile != null;
+//        return loginBean.getCredential() != null;
+        if (profile == null) {
+            this.loadProfile();
+        }
+        return profile != null;
     }
 }

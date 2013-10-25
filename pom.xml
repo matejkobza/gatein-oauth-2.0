@@ -37,6 +37,7 @@
     <modules>
         <module>gatein-oauth-2.0-core</module>
         <module>gatein-oauth-2.0-web</module>
+        <module>google-oauth-2.0-demo</module>
     </modules>
 
     <dependencies>

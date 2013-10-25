@@ -4,7 +4,6 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>oauth-2-gtn-web</artifactId>
-    <groupId>cz.muni.fi.sdipr</groupId>
     <packaging>war</packaging>
     <name>GateIn OAuth 2.0 web</name>
 
@@ -13,24 +12,6 @@
     	<artifactId>oauth-2-gtn-demo</artifactId>
     	<version>1.0.0-snapshot</version>
     </parent>
-
-    <dependencyManagement>
-        <dependencies>
-            <!--
-                Define the version of GateIn we build for. In its dependencyManagement,
-                GateIn Bill of Materials (BOM) specifies the versions, types and scopes
-                of dependencies which are granted to be compatible with (or indeed
-                in many cases provided by) GateIn Portal.
-            -->
-            <dependency>
-                <groupId>org.jboss.bom</groupId>
-                <artifactId>gatein-3.5-bom</artifactId>
-                <version>${org.jboss.bom.gatein-bom.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
         <!--
@@ -61,6 +42,12 @@
             <groupId>cz.muni.fi.sdipr</groupId>
             <artifactId>oauth-2-gtn-core</artifactId>
             <version>1.0.0-snapshot</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-plus</artifactId>
+            <version>v1-rev99-1.17.0-rc</version>
         </dependency>
 
     </dependencies>

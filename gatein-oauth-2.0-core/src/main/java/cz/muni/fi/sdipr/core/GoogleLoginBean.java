@@ -50,7 +50,10 @@ public class GoogleLoginBean implements Serializable {
         System.out.println("requestAccessToken");
         System.out.println(REDIRECT_URI);
 
-        String authorizationUrl = new GoogleBrowserClientRequestUrl(CLIENT_ID, redirectUri, scopes).build();
+        GoogleBrowserClientRequestUrl gbcru = new GoogleBrowserClientRequestUrl(CLIENT_ID, redirectUri, scopes);
+        gbcru.set("access_type", "offline");
+        gbcru.set("response_type", "code");
+        String authorizationUrl = gbcru.build();
 
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect(authorizationUrl);
@@ -72,55 +75,39 @@ public class GoogleLoginBean implements Serializable {
         requestAccessToken(REDIRECT_URI, scopes);
     }
 
-    // @todo this reimplement! should be less complex!
     public GoogleCredential getCredential() {
-        System.out.println("getCredential");
-
+        // credential is already loaded
         if (credential != null) return credential;
 
+        // credential was not loaded
         String code;
         HttpTransport transport = new NetHttpTransport();
         JacksonFactory jsonFactory = new JacksonFactory();
 
+        // authorization process
         if (Util.getPortalRequestContext().getRequestParameter("code") != null) {
 
             code = Util.getPortalRequestContext().getRequestParameter("code");
-            System.out.println("Code: " + code);
-
-            System.out.println("Response from google");
             GoogleTokenResponse response;
             try {
                 response = new GoogleAuthorizationCodeTokenRequest(transport,
                         jsonFactory, CLIENT_ID, CLIENT_SECRET, code, REDIRECT_URI)
                         .execute();
+                // add access token to session
                 session.setAttribute("accessToken", response.getAccessToken());
-                session.setAttribute("refreshToken", response.getRefreshToken());
-                session.setAttribute("expiresInSeconds", response.getExpiresInSeconds());
             } catch (Exception ex) {
                 ex.printStackTrace();
-//                log.error("getCredential", ex);
             }
         }
 
-        System.out.println(session.getAttribute("accessToken"));
+        // accessToken exists load credential
         if (session.getAttribute("accessToken") != null) {
             // Build a new GoogleCredential instance and return it.
             String accessToken = (String) session.getAttribute("accessToken");
-            String refreshToken = (String) session.getAttribute("refreshToken");
-            Long expiresInSeconds = (Long) session.getAttribute("expiresInSeconds");
 
             if (accessToken != null) {
-                credential = new GoogleCredential.Builder()
-                        .setClientSecrets(CLIENT_ID, CLIENT_SECRET)
-                        .setJsonFactory(jsonFactory)
-                        .setTransport(transport).build()
-                        .setAccessToken(accessToken)
-                        .setRefreshToken(refreshToken)
-                        .setExpirationTimeMilliseconds(expiresInSeconds);
+                credential = new GoogleCredential().setAccessToken(accessToken);
             }
-
-            System.out.println(credential);
-
         }
         return credential;
     }
