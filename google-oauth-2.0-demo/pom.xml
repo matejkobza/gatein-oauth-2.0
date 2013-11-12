@@ -2,17 +2,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
+    <!--<parent>
         <artifactId>oauth-2-gtn-demo</artifactId>
         <groupId>cz.muni.fi.sdipr</groupId>
         <version>1.0.0-snapshot</version>
-    </parent>
+    </parent>-->
+
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>google-oauth-2.0-demo</artifactId>
+    <groupId>cz.muni.fi.sdipr</groupId>
+    <version>0.0.1-beta-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>cz.muni.fi.sdipr</groupId>
+            <artifactId>oauth-2-gtn-core</artifactId>
+            <version>1.0.0-snapshot</version>
+        </dependency>
 
         <dependency>
             <groupId>com.sun.faces</groupId>
@@ -35,12 +43,14 @@
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>jsp-api</artifactId>
             <version>2.1</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -50,9 +60,45 @@
         </dependency>
 
         <dependency>
+            <groupId>com.google.oauth-client</groupId>
+            <artifactId>google-oauth-client</artifactId>
+            <version>1.17.0-rc</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client-jackson2</artifactId>
+            <version>1.16.0-rc</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-plus</artifactId>
             <version>v1-rev99-1.17.0-rc</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-drive</artifactId>
+            <version>v2-rev105-1.17.0-rc</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+            <version>3.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>1.0-PFD-1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <version>1.0-SP4</version>
         </dependency>
 
     </dependencies>
@@ -72,6 +118,13 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>primefaces.org</id>
+            <url>http://repository.primefaces.org</url>
+        </repository>
+    </repositories>
 
 
 </project>

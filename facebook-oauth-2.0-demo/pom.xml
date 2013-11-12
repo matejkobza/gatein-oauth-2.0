@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>facebook-oauth-2.0-demo</artifactId>
     <packaging>war</packaging>
-    <name>facebook-oauth-2.0-demo Maven Webapp</name>
+    <name>facebook-oauth-2.0-demo</name>
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>

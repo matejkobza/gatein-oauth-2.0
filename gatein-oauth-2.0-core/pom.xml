@@ -3,31 +3,65 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>cz.muni.fi.sdipr</groupId>
     <artifactId>oauth-2-gtn-core</artifactId>
     <packaging>jar</packaging>
     <name>GateIn OAuth 2.0 core</name>
+    <version>1.0.0-snapshot</version>
 
-    <parent>
+    <!--<parent>
         <groupId>cz.muni.fi.sdipr</groupId>
         <artifactId>oauth-2-gtn-demo</artifactId>
         <version>1.0.0-snapshot</version>
-    </parent>
+    </parent>-->
 
     <dependencies>
 
         <!-- dependency for redirect -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.exoplatform.portal</groupId>
             <artifactId>exo.portal.webui.portal</artifactId>
             <version>3.4.0.Final</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency>-->
         <!-- end dependency for redirect -->
+
+        <dependency>
+            <groupId>com.google.oauth-client</groupId>
+            <artifactId>google-oauth-client</artifactId>
+            <version>1.17.0-rc</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client-jackson2</artifactId>
+            <version>1.16.0-rc</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-api</artifactId>
+            <version>2.1.7</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <version>1.0-SP4</version>
+        </dependency>
 
     </dependencies>
 
     <build>
-        <finalName>${project.artifactId}-${project.parent.version}</finalName>
+        <finalName>${project.artifactId}-${project.version}</finalName>
     </build>
 
 </project>
