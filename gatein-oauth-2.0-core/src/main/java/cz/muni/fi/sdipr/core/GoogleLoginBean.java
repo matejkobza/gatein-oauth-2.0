@@ -10,13 +10,11 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 //import org.exoplatform.portal.webui.util.Util;
 
@@ -27,6 +25,7 @@ import java.util.Properties;
 @Named
 @ManagedBean(eager = true)
 @ApplicationScoped
+@Singleton
 public class GoogleLoginBean implements Serializable {
 
     private static final long serialVersionUID = -6239437588285327644L;
@@ -37,19 +36,23 @@ public class GoogleLoginBean implements Serializable {
     private static String CLIENT_ID;
     private static String CLIENT_SECRET;
 
-//    private PortletSession session;
-    private List<String> scopes = Arrays.asList("https://www.googleapis.com/auth/userinfo.profile");
+    private Set<String> scopes = new HashSet<String>();
     private Credential credential;
+//        private PortletSession session;
 //    GoogleCredential credential = null;
 
+    /**
+     * GoogleLoginBean is an eager managed bean. It serves as basic access point to google oauth2 api.
+     */
     public GoogleLoginBean() {
-        System.out.println("GoogleLoginBean#Construct");
+        System.out.println("@GoogleLoginBean#Construct");
+        scopes.add("https://www.googleapis.com/auth/userinfo.profile");
     }
 
     @PostConstruct
     public void init() throws GoogleOAuthLoginException {
         System.out.println("<-- PostConstruct");
-        System.out.println("GoogleLoginBean#init");
+        System.out.println("@GoogleLoginBean#init");
         Properties properties = new Properties();
         try {
             properties.load(getClass().getClassLoader().getResourceAsStream("google.properties"));
@@ -59,65 +62,71 @@ public class GoogleLoginBean implements Serializable {
         } catch (Exception e) {
             throw new GoogleOAuthLoginException();
         }
-//        login();
     }
-
-//    @PreDestroy
-//    public void destroy() {
-//
-//    }
 
     public void login() throws GoogleOAuthLoginException {
         System.out.println("@GoogleLoginBean#login");
         FacesContext ctx = FacesContext.getCurrentInstance();
+        // todo - this will need change in portlet
         HttpServletRequest request = (HttpServletRequest) ctx.getExternalContext().getRequest();
-        StringBuffer fullUrlBuf = request.getRequestURL();
-        if (request.getQueryString() != null) {
-            fullUrlBuf.append('?').append(request.getQueryString());
-            AuthorizationCodeResponseUrl authResponse =
-                    new AuthorizationCodeResponseUrl(fullUrlBuf.toString());
-            // check for user-denied error
-            if (authResponse.getState().equals("authorization")) {
-                if (authResponse.getError() != null) {
-                    throw new GoogleOAuthLoginException(authResponse.getError());
-                } else {
-                    String authorizationCode = authResponse.getCode();
-                    // request access token using authResponse.getCode()...
-                    try {
-                        TokenResponse response = new AuthorizationCodeTokenRequest(new NetHttpTransport(),
-                                new JacksonFactory(),
-                                new GenericUrl("https://accounts.google.com/o/oauth2/token"),
-                                authorizationCode)
-                                .setRedirectUri(REDIRECT_URI)
-                                .setGrantType("authorization_code")
-                                .setClientAuthentication(new ClientParametersAuthentication(CLIENT_ID, CLIENT_SECRET))
-                                .setScopes(scopes)
-                                .execute();
-                        credential = new Credential(BearerToken.authorizationHeaderAccessMethod())
-                                .setFromTokenResponse(response);
-                    } catch (IOException e) {
-                        throw new GoogleOAuthLoginException("Unable to acquire token response" ,e);
+        if (request != null) {
+            StringBuffer fullUrlBuf = request.getRequestURL();
+            if (request.getQueryString() != null) {
+                fullUrlBuf.append('?').append(request.getQueryString());
+                AuthorizationCodeResponseUrl authResponse =
+                        new AuthorizationCodeResponseUrl(fullUrlBuf.toString());
+                // check for user-denied error
+                if (authResponse.getState().contains("authorization")) {
+                    if (authResponse.getError() != null) {
+                        throw new GoogleOAuthLoginException(authResponse.getError());
+                    } else {
+                        String authorizationCode = authResponse.getCode();
+                        // request access token using authResponse.getCode()...
+                        try {
+                            TokenResponse response = new AuthorizationCodeTokenRequest(new NetHttpTransport(),
+                                    new JacksonFactory(),
+                                    new GenericUrl("https://accounts.google.com/o/oauth2/token"),
+                                    authorizationCode)
+                                    .setRedirectUri(REDIRECT_URI)
+                                    .setGrantType("authorization_code")
+                                    .setClientAuthentication(new ClientParametersAuthentication(CLIENT_ID, CLIENT_SECRET))
+                                    .setScopes(scopes)
+                                    .execute();
+                            credential = new Credential(BearerToken.authorizationHeaderAccessMethod())
+                                    .setFromTokenResponse(response);
+
+                            // user is successfully authenticated redirect to the origin page
+                            if (isAuthenticated()) {
+                                String state = authResponse.getState();
+                                String url = state.substring(state.indexOf("?") + 1);
+                                FacesContext.getCurrentInstance().getExternalContext().redirect(url);
+                            }
+                        } catch (IOException e) {
+                            throw new GoogleOAuthLoginException("Unable to acquire token response", e);
+                        }
                     }
                 }
             }
         }
     }
 
-    public void doRedirect() {
+    public void doRedirect() throws GoogleOAuthLoginException {
         FacesContext ctx = FacesContext.getCurrentInstance();
+        HttpServletRequest req = (HttpServletRequest)ctx.getExternalContext().getRequest();
+        String pointOfOrigin = req.getRequestURL().toString();
         String url = new AuthorizationCodeRequestUrl("https://accounts.google.com/o/oauth2/auth", CLIENT_ID)
-                .setState("authorization").setRedirectUri(REDIRECT_URI)
+                .setState("authorization?" + pointOfOrigin).setRedirectUri(REDIRECT_URI)
                 .setScopes(scopes)
                 .build();
         try {
             ctx.getExternalContext().redirect(url);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new GoogleOAuthLoginException("Unable to redirect", e);
         }
     }
 
     public boolean isAuthenticated() {
-        return false;
+        return credential != null;
     }
 
     public void addScopes(List<String> scopes) {
@@ -128,7 +137,11 @@ public class GoogleLoginBean implements Serializable {
         this.scopes.add(scope);
     }
 
-    public void setRedirectUri(String uri) {
-        REDIRECT_URI = uri;
+//    public void setRedirectUri(String uri) {
+//        REDIRECT_URI = uri;
+//    }
+
+    public Credential getCredential() {
+        return credential;
     }
 }

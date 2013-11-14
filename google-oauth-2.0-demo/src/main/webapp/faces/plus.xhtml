@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+<ui:composition template="/resources/templates/gmain.xhtml">
+    <ui:param name="pageTitle" value="Google OAuth 2 Demo"/>
+    <ui:param name="title" value="Google OAuth 2 Demo"/>
+    <ui:define name="head">
+        <c:if test="#{!googleLoginBean.authenticated}">
+            #{profileController.setScopes()}
+        </c:if>
+        <c:if test="#{googleLoginBean.authenticated}">
+            #{profileController.process()}
+        </c:if>
+    </ui:define>
+    <ui:define name="content">
+        <p:panel header="#{res['cz.muni.fi.sdipr.google.plus.profile']}" styleClass="pnlProfile"
+                 style="background: url('#{profileController.profile.cover.coverPhoto.url}'); width: #{profileController.profile.cover.coverPhoto.width}px; height: #{profileController.profile.cover.coverPhoto.height}px;">
+            <p:panelGrid style="background: none; border: 0px;">
+                <p:row>
+                    <p:column>
+                        <h:graphicImage value="#{profileController.profile.image.url}" styleClass="float-left"/>
+                    </p:column>
+                    <p:column><h:outputLink value="#{profileController.profile.url}" target="_blank">
+                        <h:outputText value="#{profileController.profile.displayName}"
+                                      styleClass="value"/></h:outputLink>
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+        </p:panel>
+    </ui:define>
+</ui:composition>
+</html>

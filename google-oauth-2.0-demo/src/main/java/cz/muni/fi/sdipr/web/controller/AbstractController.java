@@ -1,7 +1,8 @@
-package cz.muni.fi.sdipr.web;
+package cz.muni.fi.sdipr.web.controller;
 
 import cz.muni.fi.sdipr.core.GoogleLoginBean;
 import cz.muni.fi.sdipr.core.GoogleOAuthLoginException;
+import cz.muni.fi.sdipr.web.interceptor.Log;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -18,18 +19,24 @@ public abstract class AbstractController implements Serializable {
 
     protected String applicationName;
 
+    /**
+     * inject {@link GoogleLoginBean}
+     */
+    @Inject
+    protected GoogleLoginBean googleLoginBean;
+
+
     protected AbstractController() throws GoogleOAuthLoginException {
         Properties props = new Properties();
         try {
-            props.load(getClass().getResourceAsStream("application.properties"));
-            applicationName = props.getProperty("application.name");
-
+            props.load(getClass().getClassLoader().getResourceAsStream("cz/muni/fi/sdipr/web/application.properties"));
+            applicationName = props.getProperty("google.application.name");
         } catch (IOException e) {
-            throw new GoogleOAuthLoginException("Unable to initialize" ,e);
+            throw new GoogleOAuthLoginException("Unable to initialize", e);
         }
     }
 
-//    protected void doRedirect() {
-//        googleLoginBean.doRedirect();
-//    }
+    @Log
+    public abstract void  process();
+
 }

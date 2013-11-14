@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <h:outputStylesheet name="style.css" library="css"/>
+    <h:outputStylesheet name="zocial.css" library="css"/>
+    <link href="http://fonts.googleapis.com/css?family=Pompiere" rel="stylesheet" type="text/css"/>
+    <title><h:outputText value="#{pageTitle}"/></title>
+    <ui:insert name="head"></ui:insert>
+</h:head>
+<h:body>
+    <p:outputPanel styleClass="content">
+        <h1><h:outputText value="#{title}"/></h1>
+        <h:form>
+            <h:commandButton actionListener="#{googleLoginBean.doRedirect}"
+                             rendered="#{!googleLoginBean.authenticated}"
+                             value="#{res['button.login']}"
+                             styleClass="zocial googleplus"/>
+        </h:form>
+        <p:outputPanel rendered="#{googleLoginBean.authenticated}">
+            <h:form>
+                <p:menu styleClass="menu">
+                    <p:menuitem value="#{res['cz.muni.fi.sdipr.google.menu.profile']}" icon="ui-icon-person"
+                                action="/faces/plus.xhtml?faces-redirect=true"/>
+                    <p:menuitem value="#{res['cz.muni.fi.sdipr.google.menu.drive']}" icon="ui-icon-document"
+                                action="/faces/files.xhtml?faces-redirect=true"/>
+                </p:menu>
+                <ui:insert name="content"></ui:insert>
+            </h:form>
+        </p:outputPanel>
+    </p:outputPanel>
+</h:body>
+</html>

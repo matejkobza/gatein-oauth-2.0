@@ -1,0 +1,48 @@
+h1 {
+    margin: 10px;
+    padding: 10px;
+}
+.row {
+    display: block;
+    float: left;
+
+}
+
+.row .label {
+    width: 100px;
+    display: block;
+    float: left;
+}
+
+.row .value {
+    float: left;
+    width: 150px;
+}
+
+.pnlProfile {
+    float: left;
+    display: block;
+}
+
+.pnlProfile .ui-panel-content * {
+    background: none;
+    border: 0px;
+    color: #EFEFEF;
+}
+
+.menu {
+    float: left;
+    margin: 10px;
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.clear {
+    clear: both;
+}

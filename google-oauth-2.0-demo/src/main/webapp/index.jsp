@@ -1,1 +1,1 @@
-<% response.sendRedirect("faces/index.xhtml"); %>
+<% response.sendRedirect("faces/plus.xhtml"); %>
