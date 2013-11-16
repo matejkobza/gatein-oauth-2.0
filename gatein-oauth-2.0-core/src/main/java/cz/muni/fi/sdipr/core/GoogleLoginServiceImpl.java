@@ -6,29 +6,22 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
 
 //import org.exoplatform.portal.webui.util.Util;
 
-/**
- * {@link GoogleLoginBean} is the JSF backing bean for the application, holding
- * the input data to be re-displayed.
- */
-@Named
-@ManagedBean(eager = true)
-@ApplicationScoped
-@Singleton
-public class GoogleLoginBean implements Serializable {
+@SessionScoped
+public class GoogleLoginServiceImpl implements Serializable, GoogleLoginService {
 
-    private static final long serialVersionUID = -6239437588285327644L;
+    private static final long serialVersionUID = 1632587149151042714L;
 
     //google specific settings.
     //you can specify them at https://cloud.google.com/console
@@ -38,21 +31,17 @@ public class GoogleLoginBean implements Serializable {
 
     private Set<String> scopes = new HashSet<String>();
     private Credential credential;
-//        private PortletSession session;
-//    GoogleCredential credential = null;
+//    private PortletSession session;
 
-    /**
-     * GoogleLoginBean is an eager managed bean. It serves as basic access point to google oauth2 api.
-     */
-    public GoogleLoginBean() {
-        System.out.println("@GoogleLoginBean#Construct");
-        scopes.add("https://www.googleapis.com/auth/userinfo.profile");
+    public GoogleLoginServiceImpl() throws GoogleOAuthLoginException {
+        System.out.println("@GoogleLoginService#Construct");
     }
 
     @PostConstruct
     public void init() throws GoogleOAuthLoginException {
         System.out.println("<-- PostConstruct");
-        System.out.println("@GoogleLoginBean#init");
+        System.out.println("@GoogleLoginService#init");
+        scopes.add("https://www.googleapis.com/auth/userinfo.profile");
         Properties properties = new Properties();
         try {
             properties.load(getClass().getClassLoader().getResourceAsStream("google.properties"));
@@ -64,8 +53,9 @@ public class GoogleLoginBean implements Serializable {
         }
     }
 
+    @Override
     public void login() throws GoogleOAuthLoginException {
-        System.out.println("@GoogleLoginBean#login");
+        System.out.println("@GoogleLoginService#login");
         FacesContext ctx = FacesContext.getCurrentInstance();
         // todo - this will need change in portlet
         HttpServletRequest request = (HttpServletRequest) ctx.getExternalContext().getRequest();
@@ -110,6 +100,7 @@ public class GoogleLoginBean implements Serializable {
         }
     }
 
+    @Override
     public void doRedirect() throws GoogleOAuthLoginException {
         FacesContext ctx = FacesContext.getCurrentInstance();
         HttpServletRequest req = (HttpServletRequest)ctx.getExternalContext().getRequest();
@@ -125,22 +116,22 @@ public class GoogleLoginBean implements Serializable {
         }
     }
 
+    @Override
     public boolean isAuthenticated() {
         return credential != null;
     }
 
+    @Override
     public void addScopes(List<String> scopes) {
         this.scopes.addAll(scopes);
     }
 
+    @Override
     public void addScope(String scope) {
         this.scopes.add(scope);
     }
 
-//    public void setRedirectUri(String uri) {
-//        REDIRECT_URI = uri;
-//    }
-
+    @Override
     public Credential getCredential() {
         return credential;
     }

@@ -10,9 +10,7 @@
     <ui:param name="pageTitle" value="Google OAuth 2 Demo"/>
     <ui:param name="title" value="Google OAuth 2 Demo"/>
     <ui:define name="head">
-        <c:if test="#{!googleLoginBean.authenticated}">
-            #{profileController.setScopes()}
-        </c:if>
+        #{profileController.setScopes()}
         <c:if test="#{googleLoginBean.authenticated}">
             #{profileController.process()}
         </c:if>

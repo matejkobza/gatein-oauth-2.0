@@ -1,4 +1,4 @@
-package cz.muni.fi.sdipr.web.interceptor;
+package cz.muni.fi.sdipr.core.interceptor;
 
 import javax.inject.Qualifier;
 import javax.interceptor.InterceptorBinding;
@@ -17,4 +17,4 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Qualifier
-public @interface Log { }
+public @interface Login { }

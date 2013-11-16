@@ -16,20 +16,20 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.plus.Plus;
 import com.google.api.services.plus.PlusScopes;
 import com.google.api.services.plus.model.Person;
-import cz.muni.fi.sdipr.core.GoogleLoginBean;
 import cz.muni.fi.sdipr.core.GoogleOAuthLoginException;
+import cz.muni.fi.sdipr.core.interceptor.Login;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
 import java.io.IOException;
 
-@ViewScoped
-@ManagedBean
+@Named
+@SessionScoped
 public class ProfileController extends AbstractController {
 
+    private static final long serialVersionUID = 8707726379300120095L;
+
     private Person profile;
-
-
 
     public ProfileController() throws GoogleOAuthLoginException {
         super();
@@ -37,18 +37,16 @@ public class ProfileController extends AbstractController {
     }
 
     /**
-     * Active and valid Credential from {@link GoogleLoginBean} is required to run this method.
+     * Active and valid Credential from {@link cz.muni.fi.sdipr.core.GoogleLoginService} is required to run this method.
      */
+    @Login
     @Override
-    public void process() {
-        Plus plus = new Plus.Builder(new NetHttpTransport(), new JacksonFactory(), googleLoginBean.getCredential())
+    public void process() throws IOException {
+        Plus plus = new Plus.Builder(new NetHttpTransport(), new JacksonFactory(), googleLoginService.getCredential())
                 .setApplicationName(applicationName)
                 .build();
-        try {
-            profile = plus.people().get("me").execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        profile = plus.people().get("me").execute();
+        System.out.println(profile);
     }
 
     public Person getProfile() {
@@ -60,7 +58,6 @@ public class ProfileController extends AbstractController {
     }
 
     public void setScopes() {
-        googleLoginBean.addScope(PlusScopes.PLUS_LOGIN);
+        googleLoginService.addScope(PlusScopes.PLUS_LOGIN);
     }
-
 }

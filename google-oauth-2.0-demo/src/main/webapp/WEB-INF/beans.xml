@@ -5,6 +5,6 @@
       http://java.sun.com/xml/ns/javaee
       http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
     <interceptors>
-        <class>cz.muni.fi.sdipr.web.interceptor.LogInterceptor</class>
+        <class>cz.muni.fi.sdipr.core.interceptor.LoginInterceptor</class>
     </interceptors>
 </beans>
