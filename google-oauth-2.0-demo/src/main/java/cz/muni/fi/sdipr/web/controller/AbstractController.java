@@ -17,6 +17,7 @@ import java.util.Properties;
  */
 public abstract class AbstractController implements Serializable {
 
+    private static final long serialVersionUID = -5130573395686107860L;
     protected String applicationName;
 
     /**

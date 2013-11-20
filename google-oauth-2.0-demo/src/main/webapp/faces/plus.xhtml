@@ -8,7 +8,7 @@
       xmlns:c="http://java.sun.com/jsp/jstl/core">
 <ui:composition template="/resources/templates/gmain.xhtml">
     <ui:param name="pageTitle" value="Google OAuth 2 Demo"/>
-    <ui:param name="title" value="Google OAuth 2 Demo"/>
+    <ui:param name="title" value="Profile info"/>
     <ui:define name="head">
         #{profileController.setScopes()}
         <c:if test="#{googleLoginBean.authenticated}">

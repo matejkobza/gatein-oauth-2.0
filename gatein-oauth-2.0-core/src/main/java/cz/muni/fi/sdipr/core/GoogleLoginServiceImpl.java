@@ -8,6 +8,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.Serializable;
@@ -18,6 +19,7 @@ import java.util.Set;
 
 //import org.exoplatform.portal.webui.util.Util;
 
+@Named(value = "googleLoginBean")
 @SessionScoped
 public class GoogleLoginServiceImpl implements Serializable, GoogleLoginService {
 
@@ -51,6 +53,8 @@ public class GoogleLoginServiceImpl implements Serializable, GoogleLoginService 
         } catch (Exception e) {
             throw new GoogleOAuthLoginException();
         }
+
+        //todo try to get accessToken from portal
     }
 
     @Override
@@ -134,5 +138,13 @@ public class GoogleLoginServiceImpl implements Serializable, GoogleLoginService 
     @Override
     public Credential getCredential() {
         return credential;
+    }
+
+    @Override
+    public void logout() throws IOException {
+        this.credential = null;
+        FacesContext ctx = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) ctx.getExternalContext().getRequest();
+        ctx.getExternalContext().redirect(request.getRequestURL().toString());
     }
 }

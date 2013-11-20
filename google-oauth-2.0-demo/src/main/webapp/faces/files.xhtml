@@ -3,10 +3,11 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:c="http://java.sun.com/jsp/jstl/core">
+      xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
 <ui:composition template="/resources/templates/gmain.xhtml">
     <ui:param name="pageTitle" value="Google OAuth 2 Demo"/>
-    <ui:param name="title" value="Google OAuth 2 Demo"/>
+    <ui:param name="title" value="Google Drive"/>
     <ui:define name="head">
         #{driveController.setScopes()}
         <c:if test="#{googleLoginBean.authenticated}">
@@ -14,7 +15,57 @@
         </c:if>
     </ui:define>
     <ui:define name="content">
-        #{driveController.files}
+
+        <h:form enctype="multipart/form-data">
+            <p:fileUpload value="#{driveController.file}" mode="simple"/>
+
+            <p:commandButton value="Submit" ajax="false"
+                             actionListener="#{driveController.upload}"/>
+        </h:form>
+
+        <h:form>
+            <p:commandButton value="My drive" styleClass="upload button"
+                             actionListener="#{driveController.loadFolder('root')}"
+                             update="tblFiles"/>
+            <p:commandButton value="Starred" styleClass="upload button"
+                             actionListener="#{driveController.loadStarred()}"
+                             update="tblFiles"/>
+            <p:commandButton value="Trash" styleClass="upload button"
+                             actionListener="#{driveController.loadTrash()}"
+                             update="tblFiles"/>
+
+            <p:dataTable value="#{driveController.files}" var="file" id="tblFiles" styleClass="filesTable">
+                <p:column headerText="Title">
+                    <h:graphicImage value="#{file.iconLink}" styleClass="fileIcon"/>
+                    <h:outputText value="#{file.title}" styleClass="fileLabel"
+                                  rendered="#{!driveController.isFolder(file)}"/>
+                    <p:commandLink value="#{file.title}"
+                                   rendered="#{driveController.isFolder(file)}"
+                                   actionListener="#{driveController.loadFolder(file.id)}"
+                                   update="tblFiles"/>
+                    <h:outputText value="Shared" styleClass="note" rendered="#{file.shared}"/>
+                    <h:outputText value="#{driveController.getParentsString(file)}" styleClass="note strong"
+                                  rendered="#{file.parents.size() gt 0}"/>
+                </p:column>
+                <p:column headerText="Action">
+                    <h:commandButton value="Download"
+                                     rendered="#{driveController.isDownloadable(file)}"
+                                     actionListener="#{driveController.downloadFile(file)}"
+                                     styleClass="button"/>
+                    <p:commandButton value="Remove"
+                                     title="Move to the trash"
+                                     actionListener="#{driveController.trashFile(file.id)}"
+                                     styleClass="button"
+                                     update="tblFiles"/>
+                    <h:outputLink target="_blank"
+                                  value="#{file.alternateLink}"
+                                  rendered="#{file.editable}"
+                                  title="Open in new window" styleClass="button">
+                        <h:outputText value="Edit"/>
+                    </h:outputLink>
+                </p:column>
+            </p:dataTable>
+        </h:form>
     </ui:define>
 </ui:composition>
 </html>

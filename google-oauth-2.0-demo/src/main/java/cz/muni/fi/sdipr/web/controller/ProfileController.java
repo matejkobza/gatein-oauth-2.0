@@ -46,7 +46,6 @@ public class ProfileController extends AbstractController {
                 .setApplicationName(applicationName)
                 .build();
         profile = plus.people().get("me").execute();
-        System.out.println(profile);
     }
 
     public Person getProfile() {

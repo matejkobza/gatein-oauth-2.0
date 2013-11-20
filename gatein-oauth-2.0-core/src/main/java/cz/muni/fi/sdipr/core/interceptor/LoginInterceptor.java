@@ -27,9 +27,9 @@ public class LoginInterceptor implements Serializable {
 
     @AroundInvoke
     public Object process(InvocationContext context) {
-        System.out.println("Interceptor running");
         try {
             return context.proceed();
+            // todo this exception we must examine!!! to be the 403 permission denied
         } catch (GoogleJsonResponseException ex) {
             try {
                 googleLoginService.doRedirect();
