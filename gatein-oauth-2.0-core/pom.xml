@@ -18,12 +18,12 @@
     <dependencies>
 
         <!-- dependency for redirect -->
-        <!--<dependency>
+        <dependency>
             <groupId>org.exoplatform.portal</groupId>
             <artifactId>exo.portal.webui.portal</artifactId>
             <version>3.4.0.Final</version>
             <scope>provided</scope>
-        </dependency>-->
+        </dependency>
         <!-- end dependency for redirect -->
 
         <dependency>
@@ -77,5 +77,12 @@
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
     </build>
+
+    <repositories>
+        <repository>
+            <id>EXOPLATFORM</id>
+            <url>http://maven2.exoplatform.org/rest/maven2</url>
+        </repository>
+    </repositories>
 
 </project>

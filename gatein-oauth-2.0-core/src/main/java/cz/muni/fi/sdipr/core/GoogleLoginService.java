@@ -33,7 +33,7 @@ public interface GoogleLoginService {
      * When you need check if user is authenticated with google in the application from your JSF page use this method
      * @return true if authenticated, false otherwise
      */
-    public boolean isAuthenticated();
+    public boolean isAuthenticated() throws GoogleOAuthLoginException;
 
     public void addScope(String scope);
 

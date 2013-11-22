@@ -1,38 +1,50 @@
 <f:view xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
         xmlns:f="http://java.sun.com/jsf/core"
-        xmlns:h="http://java.sun.com/jsf/html">
-    <h:head/>
-    <h:body>
-        <h:outputStylesheet library="css" name="google-oauth-portlets.css"/>
-        <h:outputStylesheet library="css" name="zocial.css"/>
-        <h:panelGrid cellpadding="10">
-          <h:form>
-            <h:panelGroup rendered="#{googlePlusBean.isAuthenticated}" styleClass="container plus-home">
-              <h2><h:outputText value="#{res['cz.muni.fi.sdipr.google.plus.title']}"/></h2>
-              <h:panelGrid columns="2" styleClass="float-left">
-                <h:outputText value="#{res['cz.muni.fi.sdipr.google.plus.displayName']}"/>
-                <h:outputText value="#{googlePlusBean.profile.displayName}"/>
+        xmlns:rich="http://richfaces.org/rich">
+    <ui:composition template="/resources/templates/gmain.xhtml">
+        <!-- do the head staf -->
+        <ui:define name="head">
+            #{profileController.setScopes()}
+            <c:if test="#{googleLoginBean.authenticated}">
+                #{profileController.process()}
+            </c:if>
+        </ui:define>
 
-                <h:outputText value="#{res['cz.muni.fi.sdipr.google.plus.email']}"/>
-                <h:outputText value="#{googlePlusBean.profile.emails[0]}"/>
-
-              </h:panelGrid>
-              <h:graphicImage url="#{googlePlusBean.profile.image.url}"
-                              alt="#{googlePlusBean.profile.displayName}"
-                              styleClass="float-left"/>
-              <h:panelGroup styleClass="clear"/>
-            </h:panelGroup>
-
-            <h:panelGroup styleClass="container">
-              <h:commandLink actionListener="#{googleLoginBean.requestAccessToken}"
-                             value="#{res['cz.muni.fi.sdipr.google.plus.login']}"
-                             rendered="#{!googlePlusBean.isAuthenticated}"
-                             styleClass="zocial googleplus">
-                <f:param name="javax.portlet.faces.DirectLink" value="true"/>
-              </h:commandLink>
-            </h:panelGroup>
-          </h:form>
-
-        </h:panelGrid>
-    </h:body>
+        <!-- do the content staf -->
+        <ui:define name="content">
+            <rich:panel styleClass="pnlProfile">
+                <rich:panel styleClass="left">
+                    <h:graphicImage value="#{profileController.profile.image.url}" styleClass="profileImage"/>
+                    <h:panelGroup styleClass="profileName">
+                        <h:outputLink value="#{profileController.profile.url}" target="_blank">
+                            <h:outputText value="#{profileController.profile.displayName}"/>
+                        </h:outputLink>
+                    </h:panelGroup>
+                    <h:panelGroup rendered="#{!profileController.organizations.isEmpty()}">
+                        <c:forEach items="#{profileController.organizations}" var="organization">
+                            <h:panelGroup styleClass="row" rendered="#{organization.type eq 'school'}">
+                                <h:outputText value="#{res['cz.muni.fi.sdipr.google.profile.attends']} "/>
+                                <h:outputText value="#{organization.name}"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="row" rendered="#{organization.type eq 'work'}">
+                                <h:outputText value="#{res['cz.muni.fi.sdipr.google.profile.worksAt']} "/>
+                                <h:outputText value="#{organization.name}"/>
+                            </h:panelGroup>
+                        </c:forEach>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="home" rendered="#{profileController.home ne null}">
+                        <h:outputText value="#{res['cz.muni.fi.sdipr.google.profile.livesIn']} "/>
+                        <h:outputText value="#{profileController.home}"/>
+                    </h:panelGroup>
+                </rich:panel>
+                <rich:panel styleClass="right">
+                    <h:graphicImage value="#{profileController.profile.cover.coverPhoto.url}"
+                                    styleClass="profileCover"/>
+                </rich:panel>
+            </rich:panel>
+        </ui:define>
+    </ui:composition>
 </f:view>

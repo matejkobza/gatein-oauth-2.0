@@ -4,6 +4,8 @@ import com.google.api.client.auth.oauth2.*;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -59,10 +61,18 @@ public class GoogleLoginServiceImpl implements Serializable, GoogleLoginService 
 
     @Override
     public void login() throws GoogleOAuthLoginException {
+        // due to unknown problem when credential is active just skip this method because it generates bad request
+        // exception in log
+        if (credential != null) {
+            return;
+        }
         System.out.println("@GoogleLoginService#login");
         FacesContext ctx = FacesContext.getCurrentInstance();
         // todo - this will need change in portlet
-        HttpServletRequest request = (HttpServletRequest) ctx.getExternalContext().getRequest();
+        PortalRequestContext prc = PortalRequestContext.getCurrentInstance();
+        HttpServletRequest request = prc.getRequest();
+
+//        HttpServletRequest request = (HttpServletRequest) ctx.getExternalContext().getRequest();
         if (request != null) {
             StringBuffer fullUrlBuf = request.getRequestURL();
             if (request.getQueryString() != null) {
@@ -90,10 +100,11 @@ public class GoogleLoginServiceImpl implements Serializable, GoogleLoginService 
                                     .setFromTokenResponse(response);
 
                             // user is successfully authenticated redirect to the origin page
-                            if (isAuthenticated()) {
+                            if (credential != null) {
                                 String state = authResponse.getState();
                                 String url = state.substring(state.indexOf("?") + 1);
-                                FacesContext.getCurrentInstance().getExternalContext().redirect(url);
+//                                FacesContext.getCurrentInstance().getExternalContext().redirect(url);
+                                prc.sendRedirect(url);
                             }
                         } catch (IOException e) {
                             throw new GoogleOAuthLoginException("Unable to acquire token response", e);
@@ -104,10 +115,61 @@ public class GoogleLoginServiceImpl implements Serializable, GoogleLoginService 
         }
     }
 
+    /**
+     * Web Application
+     * @throws GoogleOAuthLoginException
+     */
+//    @Override
+//    public void login() throws GoogleOAuthLoginException {
+//        System.out.println("@GoogleLoginService#login");
+//        FacesContext ctx = FacesContext.getCurrentInstance();
+//        todo - this will need change in portlet
+//        HttpServletRequest request = (HttpServletRequest) ctx.getExternalContext().getRequest();
+//        if (request != null) {
+//            StringBuffer fullUrlBuf = request.getRequestURL();
+//            if (request.getQueryString() != null) {
+//                fullUrlBuf.append('?').append(request.getQueryString());
+//                AuthorizationCodeResponseUrl authResponse =
+//                        new AuthorizationCodeResponseUrl(fullUrlBuf.toString());
+//                check for user-denied error
+//                if (authResponse.getState().contains("authorization")) {
+//                    if (authResponse.getError() != null) {
+//                        throw new GoogleOAuthLoginException(authResponse.getError());
+//                    } else {
+//                        String authorizationCode = authResponse.getCode();
+//                        request access token using authResponse.getCode()...
+//                        try {
+//                            TokenResponse response = new AuthorizationCodeTokenRequest(new NetHttpTransport(),
+//                                    new JacksonFactory(),
+//                                    new GenericUrl("https://accounts.google.com/o/oauth2/token"),
+//                                    authorizationCode)
+//                                    .setRedirectUri(REDIRECT_URI)
+//                                    .setGrantType("authorization_code")
+//                                    .setClientAuthentication(new ClientParametersAuthentication(CLIENT_ID, CLIENT_SECRET))
+//                                    .setScopes(scopes)
+//                                    .execute();
+//                            credential = new Credential(BearerToken.authorizationHeaderAccessMethod())
+//                                    .setFromTokenResponse(response);
+//
+//                            user is successfully authenticated redirect to the origin page
+//                            if (isAuthenticated()) {
+//                                String state = authResponse.getState();
+//                                String url = state.substring(state.indexOf("?") + 1);
+//                                FacesContext.getCurrentInstance().getExternalContext().redirect(url);
+//                            }
+//                        } catch (IOException e) {
+//                            throw new GoogleOAuthLoginException("Unable to acquire token response", e);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+
     @Override
     public void doRedirect() throws GoogleOAuthLoginException {
         FacesContext ctx = FacesContext.getCurrentInstance();
-        HttpServletRequest req = (HttpServletRequest)ctx.getExternalContext().getRequest();
+        HttpServletRequest req = (HttpServletRequest) ctx.getExternalContext().getRequest();
         String pointOfOrigin = req.getRequestURL().toString();
         String url = new AuthorizationCodeRequestUrl("https://accounts.google.com/o/oauth2/auth", CLIENT_ID)
                 .setState("authorization?" + pointOfOrigin).setRedirectUri(REDIRECT_URI)
@@ -120,10 +182,31 @@ public class GoogleLoginServiceImpl implements Serializable, GoogleLoginService 
         }
     }
 
+    /**
+     * Portlet Application
+     * @return
+     * @throws GoogleOAuthLoginException
+     */
     @Override
-    public boolean isAuthenticated() {
+    public boolean isAuthenticated() throws GoogleOAuthLoginException {
+        PortalRequestContext prc = Util.getPortalRequestContext();
+        String state = prc.getRequestParameter("state");
+        if (state != null) {
+            if (state.contains("authorization")) {
+                this.login();
+            }
+        }
         return credential != null;
     }
+
+    /**
+     * Web Application
+     * @return
+     */
+//    @Override
+//    public boolean isAuthenticated() {
+//        return credential != null;
+//    }
 
     @Override
     public void addScopes(List<String> scopes) {

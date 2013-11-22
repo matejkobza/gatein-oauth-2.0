@@ -1,0 +1,30 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:rich="http://richfaces.org/rich">
+    <h:head>
+        <ui:insert name="head"></ui:insert>
+    </h:head>
+    <h:body>
+        <f:facet name="last">
+            <h:outputStylesheet name="style.css" library="css"/>
+            <h:outputStylesheet name="zocial.css" library="css"/>
+            <link href="http://fonts.googleapis.com/css?family=Pompiere" rel="stylesheet" type="text/css"/>
+        </f:facet>
+
+        <rich:panel>
+            <h:form>
+                <h:panelGroup rendered="#{!googleLoginBean.authenticated}" styleClass="pnlLogin">
+                    <h1>Welcome</h1>
+                    <h:commandLink actionListener="#{googleLoginBean.doRedirect}"
+                                   value="#{res['button.signInWithGoogle']}"
+                                   styleClass="zocial googleplus"/>
+                </h:panelGroup>
+            </h:form>
+            <rich:panel rendered="#{googleLoginBean.authenticated}">
+                <ui:insert name="content"></ui:insert>
+            </rich:panel>
+        </rich:panel>
+    </h:body>
+</f:view>

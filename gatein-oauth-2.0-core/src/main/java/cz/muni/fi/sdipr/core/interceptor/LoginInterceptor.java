@@ -25,19 +25,31 @@ public class LoginInterceptor implements Serializable {
     @Inject
     private GoogleLoginService googleLoginService;
 
+    /**
+     * This interceptor is monitoring the login process and if permission denied because of insufficient scope is thrown
+     * than it proceed to request a new accessToken with this scope
+     * @param context InvocationContext from the application
+     * @return
+     * @throws Exception if any unexpected exception is thrown
+     */
     @AroundInvoke
-    public Object process(InvocationContext context) {
+    public Object process(InvocationContext context) throws Exception {
         try {
-            return context.proceed();
-            // todo this exception we must examine!!! to be the 403 permission denied
+            return context.proceed(); // run the context
         } catch (GoogleJsonResponseException ex) {
-            try {
-                googleLoginService.doRedirect();
-            } catch (GoogleOAuthLoginException e) {
-                e.printStackTrace();
+            // json exception something went wrong on google side (bad request, permission denied etc.)
+            if (ex.getDetails().getCode() == 403) {
+                try {
+                    // redirect to google and request new accessToken for added scope
+                    googleLoginService.doRedirect();
+                } catch (GoogleOAuthLoginException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                throw ex;
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            throw ex;
         }
         return null;
     }
