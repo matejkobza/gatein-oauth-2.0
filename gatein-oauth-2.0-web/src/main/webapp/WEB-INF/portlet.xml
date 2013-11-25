@@ -5,11 +5,9 @@
    http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd">
 
     <portlet>
-        <description>Google OAuth 2.0 portlet, shows simple flow of OAuth 2.0 login. After successful login user details
-            are shown.
-        </description>
-        <portlet-name>google-oauth-2.0-portlet</portlet-name>
-        <display-name>Google OAuth 2.0 Portlet</display-name>
+        <description>Google OAuth 2.0 portlet that shows simple flow of OAuth 2.0 login. After successful login user details are shown.</description>
+        <portlet-name>google-profile-basic</portlet-name>
+        <display-name>Google Profile</display-name>
         <portlet-class>javax.portlet.faces.GenericFacesPortlet</portlet-class>
         <init-param>
             <name>javax.portlet.faces.defaultViewId.view</name>
@@ -25,7 +23,7 @@
             <portlet-mode>VIEW</portlet-mode>
         </supports>
         <portlet-info>
-            <title>Google OAuth 2.0 Portlet</title>
+            <title>Google Profile</title>
         </portlet-info>
         <container-runtime-option>
             <name>org.gatein.pc.remotable</name>
@@ -33,6 +31,34 @@
         </container-runtime-option>
     </portlet>
 
+    <portlet>
+        <description>no description so far</description>
+        <portlet-name>google-drive</portlet-name>
+        <display-name>Google Drive</display-name>
+        <portlet-class>javax.portlet.faces.GenericFacesPortlet</portlet-class>
+        <init-param>
+            <name>javax.portlet.faces.defaultViewId.view</name>
+            <value>/pages/drive.xhtml</value>
+        </init-param>
+        <init-param>
+            <name>javax.portlet.faces.preserveActionParams</name>
+            <value>true</value>
+        </init-param>
+        <expiration-cache>0</expiration-cache>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>VIEW</portlet-mode>
+        </supports>
+        <portlet-info>
+            <title>Google Drive</title>
+        </portlet-info>
+        <container-runtime-option>
+            <name>org.gatein.pc.remotable</name>
+            <value>true</value>
+        </container-runtime-option>
+    </portlet>
+
+    <!-- this is a must!!! otherwise there is a problem with injection of HttpServletRequest -->
     <filter>
         <filter-name>PortletCDIFilter</filter-name>
         <filter-class>org.gatein.cdi.PortletCDIFilter</filter-class>
@@ -44,8 +70,8 @@
 
     <filter-mapping>
         <filter-name>PortletCDIFilter</filter-name>
-        <portlet-name>google-oauth-2.0-portlet</portlet-name>
+        <portlet-name>google-profile-basic</portlet-name>
+        <portlet-name>google-drive</portlet-name>
     </filter-mapping>
-
 
 </portlet-app>

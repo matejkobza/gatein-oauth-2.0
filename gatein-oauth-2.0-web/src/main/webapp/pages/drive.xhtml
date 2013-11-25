@@ -1,13 +1,119 @@
 <f:view xmlns="http://www.w3.org/1999/xhtml"
         xmlns:f="http://java.sun.com/jsf/core"
-        xmlns:h="http://java.sun.com/jsf/html">
-    <h:head/>
-    <h:body>
-        <h:outputStylesheet library="css" name="style.css"/>
-        <h:outputStylesheet library="css" name="zocial.css"/>
-        <h:panelGrid cellpadding="10">
-            <h:form>
-            </h:form>
-        </h:panelGrid>
-    </h:body>
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:a4j="http://richfaces.org/a4j"
+        xmlns:rich="http://richfaces.org/rich"
+        >
+    <ui:composition template="/resources/templates/gmain.xhtml">
+        <ui:define name="head">
+            #{driveController.setScopes()}
+            <c:if test="#{googleLoginBean.authenticated}">
+                #{driveController.process()}
+            </c:if>
+        </ui:define>
+        <ui:define name="content">
+            <rich:panel styleClass="driveContent">
+                <h:form>
+                    <a4j:outputPanel ajaxRendered="true" id="pnlControls" layout="block" styleClass="panelControls">
+                        <rich:panel rendered="#{driveController.renderControllsPanel()}">
+                            <a4j:commandButton value="#{res['cz.muni.fi.sdipr.google.drive.remove']}"
+                                               actionListener="#{driveController.remove}"
+                                               styleClass="button"/>
+                            <a4j:commandButton value="#{res['cz.muni.fi.sdipr.google.drive.download']}"
+                                               actionListener="#{driveController.download}"
+                                               styleClass="button"/>
+                        </rich:panel>
+                    </a4j:outputPanel>
+
+                    <div class="clear"></div>
+                    <rich:panel styleClass="menu">
+                        <rich:fileUpload fileUploadListener="#{driveController.upload}"
+                                         immediateUpload="true"
+                                         id="upload"
+                                         listHeight="0"
+                                         addLabel="#{res['cz.muni.fi.sdipr.google.drive.upload']}">
+                        </rich:fileUpload>
+                        <a4j:commandLink value="#{res['cz.muni.fi.sdipr.google.drive.myDrive']}"
+                                         actionListener="#{driveController.loadFolder('root')}"
+                                         render="tblFiles"
+                                         styleClass="menuItem block"/>
+                        <a4j:commandLink value="#{res['cz.muni.fi.sdipr.google.drive.starred']}"
+                                         actionListener="#{driveController.loadStarred()}"
+                                         render="tblFiles"
+                                         styleClass="menuItem block"/>
+                        <a4j:commandLink value="#{res['cz.muni.fi.sdipr.google.drive.trash']}"
+                                         actionListener="#{driveController.loadTrash()}"
+                                         render="tblFiles"
+                                         styleClass="menuItem block"/>
+                    </rich:panel>
+                    <rich:dataTable id="tblFiles" value="#{driveController.files}" var="file"
+                                    styleClass="tableFiles">
+                        <f:facet name="header">
+                            <rich:columnGroup>
+                                <rich:column>
+                                    <h:selectBooleanCheckbox
+                                            onclick="var vThis = jQuery(this);jQuery('.tableFiles').find('.file-checkbox').attr('checked', vThis.attr('checked') == 'checked');"
+                                            valueChangeListener="#{driveController.selectAllFiles}">
+                                        <a4j:ajax event="change" render="pnlControls"/>
+                                    </h:selectBooleanCheckbox>
+                                </rich:column>
+                                <rich:column styleClass="align-left">
+                                    <h:outputText value="#{res['cz.muni.fi.sdipr.google.drive.title']}"/>
+                                </rich:column>
+                                <rich:column styleClass="align-left">
+                                    <h:outputText value="#{res['cz.muni.fi.sdipr.google.drive.owner']}"/>
+                                </rich:column>
+                                <rich:column styleClass="align-left">
+                                    <h:outputText value="#{res['cz.muni.fi.sdipr.google.drive.lastModified']}"/>
+                                </rich:column>
+                            </rich:columnGroup>
+                        </f:facet>
+                        <rich:column styleClass="align-center">
+                            <h:selectBooleanCheckbox value="#{driveController.checked[file.id]}"
+                                                     styleClass="file-checkbox">
+                                <a4j:ajax event="change" render="pnlControls"/>
+                            </h:selectBooleanCheckbox>
+                        </rich:column>
+                        <rich:column>
+                            <h:graphicImage value="#{file.iconLink}" styleClass="fileIcon"/>
+                            <!-- not a folder -->
+                            <h:outputLink value="#{file.alternateLink}" styleClass="fileLabel"
+                                          rendered="#{file.editable and !driveController.isFolder(file)}">
+                                <h:outputText value="#{file.title}"/>
+                            </h:outputLink>
+
+                            <h:outputText value="#{file.title}" styleClass="fileLabel"
+                                          rendered="#{!file.editable and !driveController.isFolder(file)}"/>
+
+                            <!-- folder -->
+                            <a4j:commandLink value="#{file.title}"
+                                             rendered="#{driveController.isFolder(file)}"
+                                             actionListener="#{driveController.loadFolder(file.id)}"
+                                             update="tblFiles"
+                                             styleClass="fileLabel"/>
+
+                            <!-- additional info for the file -->
+                            <h:outputText value="#{res['cz.muni.fi.sdipr.google.drive.shared']}"
+                                          styleClass="note"
+                                          rendered="#{file.shared}"/>
+                            <h:outputText value="#{driveController.getParentsString(file)}"
+                                          styleClass="note strong"
+                                          rendered="#{file.parents.size() gt 0}"/>
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{driveController.getOwnersNames(file)}"/>
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{file.modifiedDate.value}">
+                                <f:convertDateTime pattern="dd.MM.yyyy"/>
+                            </h:outputText>
+                            <h:outputText value="#{file.lastModifyingUserName}" styleClass="note"/>
+                        </rich:column>
+                    </rich:dataTable>
+                </h:form>
+            </rich:panel>
+        </ui:define>
+    </ui:composition>
 </f:view>

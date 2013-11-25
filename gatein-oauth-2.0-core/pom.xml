@@ -3,17 +3,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cz.muni.fi.sdipr</groupId>
     <artifactId>oauth-2-gtn-core</artifactId>
     <packaging>jar</packaging>
     <name>GateIn OAuth 2.0 core</name>
-    <version>1.0.0-snapshot</version>
 
-    <!--<parent>
+    <parent>
         <groupId>cz.muni.fi.sdipr</groupId>
         <artifactId>oauth-2-gtn-demo</artifactId>
         <version>1.0.0-snapshot</version>
-    </parent>-->
+    </parent>
 
     <dependencies>
 
@@ -44,18 +42,10 @@
             <version>1.17.0-rc</version>
         </dependency>
 
+        <!-- General JSF dependencies for portlet development -->
         <dependency>
-            <groupId>com.sun.faces</groupId>
-            <artifactId>jsf-api</artifactId>
-            <version>2.2.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>3.0-alpha-1</version>
-            <scope>provided</scope>
+            <groupId>org.jboss.spec.javax.faces</groupId>
+            <artifactId>jboss-jsf-api_2.1_spec</artifactId>
         </dependency>
 
         <dependency>
@@ -77,12 +67,4 @@
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
     </build>
-
-    <repositories>
-        <repository>
-            <id>EXOPLATFORM</id>
-            <url>http://maven2.exoplatform.org/rest/maven2</url>
-        </repository>
-    </repositories>
-
 </project>

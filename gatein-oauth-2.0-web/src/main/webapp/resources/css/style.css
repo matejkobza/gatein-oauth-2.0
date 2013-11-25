@@ -16,8 +16,12 @@ input[type="text"] {
     font-size: 9px;
 }
 
+.rf-dt-c {
+    font-size: 12px;
+}
+
 .pbr-body {
-    font: 13px Roboto,arial,sans-serif !important;
+    font: 13px Roboto, arial, sans-serif !important;
 }
 
 .rf-p {
@@ -29,6 +33,27 @@ input[type="text"] {
 .rf-p-b {
     font-size: inherit !important;
     padding: 0px !important;
+}
+
+.button {
+    background: none;
+    background-color: #DFDFDF;
+    color: #6f6f6f;
+    padding: 5px;
+    margin: 5px;
+    border: 1px #AFAFAF solid;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 3px !important;
+}
+
+.button:hover {
+    background-color: #EFEFEF;
+    color: #222222;
+}
+
+.block {
+    display: block;
 }
 
 .pnlProfile .rf-p-b {
@@ -124,6 +149,10 @@ input[type="text"] {
     text-align: right;
 }
 
+.align-center {
+    text-align: center;
+}
+
 .clear {
     clear: both;
     height: 5px !important;
@@ -132,3 +161,110 @@ input[type="text"] {
     margin: 0px !important;
 }
 
+/* google drive portlet */
+.driveContent {
+    padding: 10px;
+    font-size: 12px !important;
+}
+
+.driveContent .fileIcon {
+
+}
+
+.driveContent .fileLabel {
+    margin-top: 2px !important;
+    line-height: 15px !important;
+    display: inline-block !important;
+    font-size: 12px !important;
+    color: #000000;
+}
+
+.driveContent a.fileLabel:hover {
+    text-decoration: underline;
+}
+
+.driveContent .note {
+    font-size: 11px !important;
+    margin-left: 5px;
+    color: #aFaFaF;
+}
+
+.driveContent .strong {
+    font-weight: bold !important;
+}
+
+.driveContent .tableFiles {
+    border: 0px;
+    float: left;
+    width: 700px;
+    margin-bottom: 5px !important;
+}
+
+.driveContent .tableFiles tr th {
+    text-transform: uppercase !important;
+}
+
+.driveContent .tableFiles tr th, .driveContent .tableFiles tr td {
+    background: none;
+    border: 0px;
+    border-bottom: 1px #DFDFDF solid;
+    padding: 2px !important;
+    padding-top: 3px !important;
+    vertical-align: middle !important;
+}
+
+.driveContent .panelControls {
+    float: left;
+    height: 30px;
+    padding-left: 130px;
+}
+
+.driveContent .menu {
+    float: left;
+    width: 100px;
+    padding: 5px 15px 15px 10px !important;
+}
+
+.driveContent .menu .menuItem {
+    font-size: 13px;
+    color: #000000;
+    padding: 2px;
+    padding-left: 5px;
+}
+
+/* richfaces file upload fix */
+.driveContent .rf-fu, .driveContent .rf-fu-hdr {
+    background: none !important;
+    border: none !important;
+    padding: 0px !important;
+    margin: 0px !important;
+}
+
+.driveContent .rf-fu-hdr {
+    max-width: 150px !important;
+}
+
+.driveContent .rf-fu-lst, .driveContent .rf-fu-btns-rgh {
+    display: none !important;
+}
+
+.driveContent .rf-fu-btn-add {
+    background: none !important;
+    border: none !important;
+    cursor: pointer !important;
+    padding: 0px !important;
+    margin: 0px !important;
+}
+
+.driveContent .rf-fu-btn-cnt-add {
+    background: none #DA4B39 !important;
+    border: #DA4B39 !important;
+    color: #ffffff !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+    border-radius: 3px !important;
+    background-position: 0px 0px !important;
+    padding: 5px !important;
+
+}

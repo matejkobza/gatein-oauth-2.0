@@ -11,18 +11,18 @@ import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.ParentReference;
 import cz.muni.fi.sdipr.core.GoogleOAuthLoginException;
 import cz.muni.fi.sdipr.core.interceptor.Login;
+import org.richfaces.event.FileUploadEvent;
+import org.richfaces.model.UploadedFile;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.inject.Named;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLConnection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,7 +38,7 @@ public class DriveController extends AbstractController {
     private static final long serialVersionUID = -7611041534898427988L;
     private Drive drive;
     private List<File> files;
-
+    private Map<String, Boolean> checked = new HashMap<String, Boolean>();
 
     public DriveController() throws GoogleOAuthLoginException {
         super();
@@ -137,7 +137,7 @@ public class DriveController extends AbstractController {
     }
 
     public void loadFolder(String folderId) throws IOException {
-        files = drive.files().list().setQ("'" +  folderId + "' in parents and trashed = false").execute().getItems();
+        files = drive.files().list().setQ("'" + folderId + "' in parents and trashed = false").execute().getItems();
     }
 
     public void loadStarred() throws IOException {
@@ -148,8 +148,62 @@ public class DriveController extends AbstractController {
         files = drive.files().list().setQ("trashed = true").execute().getItems();
     }
 
-    public void upload() throws IOException {
+    public void upload(FileUploadEvent event) throws IOException {
+        UploadedFile file = event.getUploadedFile();
 
+        File body = new File();
+        body.setTitle(file.getName());
+
+//        body.setDescription(description);
+        body.setMimeType(file.getContentType());
+
+        //todo Set the parent folder. - later we will use this
+//        if (parentId != null && parentId.length() > 0) {
+//            body.setParents(
+//                    Arrays.asList(new ParentReference().setId(parentId)));
+//        }
+
+        // File's content.
+        java.io.File fileContent = new java.io.File(file.getName());
+        FileContent mediaContent = new FileContent(file.getContentType(), fileContent);
+        drive.files().insert(body, mediaContent).execute();
     }
 
+    public String getOwnersNames(File file) {
+        StringBuilder sb = new StringBuilder();
+        for (String name : file.getOwnerNames()) {
+            sb.append(name);
+            sb.append(", ");
+        }
+        return sb.toString().substring(0, sb.toString().length() - 2);
+    }
+
+    public boolean renderControllsPanel() {
+        Set<String> indexes = this.checked.keySet();
+        for (String index : indexes) {
+            if (this.checked.get(index).booleanValue()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void selectAllFiles(ValueChangeEvent event) {
+        Boolean value = (Boolean) event.getNewValue();
+        if (value) {
+            for (File file : files) {
+                this.checked.put(file.getId(), true);
+            }
+        } else {
+            this.checked = new HashMap<String, Boolean>();
+        }
+    }
+
+    public Map<String, Boolean> getChecked() {
+        return checked;
+    }
+
+    public void setChecked(Map<String, Boolean> checked) {
+        this.checked = checked;
+    }
 }

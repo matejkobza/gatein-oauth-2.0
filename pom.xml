@@ -10,9 +10,9 @@
 
     <version>1.0.0-snapshot</version>
 
-    <description>Login to facebook and google plus.
+    <description>Login to facebook and google via OAuth 2.
 
-        A simple portlet using JavaServer Faces 2.1 and PrimeFaces.
+        A simple portlets using Java Server Faces 2.1 and RichFaces.
     </description>
     <url>http://www.gatein.org</url>
     <licenses>
@@ -41,52 +41,32 @@
         <module>facebook-oauth-2.0-demo</module>
     </modules>
 
-    <dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <!--
+                Define the version of GateIn we build for. In its dependencyManagement,
+                GateIn Bill of Materials (BOM) specifies the versions, types and scopes
+                of dependencies which are granted to be compatible with (or indeed
+                in many cases provided by) GateIn Portal.
+            -->
+            <dependency>
+                <groupId>org.jboss.bom</groupId>
+                <artifactId>gatein-3.5-bom</artifactId>
+                <version>${org.jboss.bom.gatein-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
+    <!--<dependencies>
         <dependency>
             <groupId>org.jboss.spec</groupId>
             <artifactId>jboss-javaee-6.0</artifactId>
             <version>1.0.0.Final</version>
             <type>pom</type>
         </dependency>
-
-        <!-- general google dependencies for oauth2 -->
-        <dependency>
-            <groupId>com.google.oauth-client</groupId>
-            <artifactId>google-oauth-client</artifactId>
-            <version>1.17.0-rc</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.http-client</groupId>
-            <artifactId>google-http-client-jackson2</artifactId>
-            <version>1.16.0-rc</version>
-        </dependency>
-        <!-- end general google dependencies -->
-
-        <!-- this should be part of project for google+ services -->
-        <dependency>
-            <groupId>com.google.apis</groupId>
-            <artifactId>google-api-services-plus</artifactId>
-            <version>v1-rev99-1.17.0-rc</version>
-        </dependency>
-
-        <!-- java injection -->
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1.0-PFD-1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- CDI -->
-        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <version>1.0-SP4</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
+    </dependencies>-->
 
     <repositories>
         <repository>
