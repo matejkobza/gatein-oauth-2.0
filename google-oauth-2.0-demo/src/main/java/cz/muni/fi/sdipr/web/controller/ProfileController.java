@@ -17,7 +17,7 @@ import com.google.api.services.plus.Plus;
 import com.google.api.services.plus.PlusScopes;
 import com.google.api.services.plus.model.Person;
 import cz.muni.fi.sdipr.core.GoogleOAuthLoginException;
-import cz.muni.fi.sdipr.core.interceptor.Login;
+import cz.muni.fi.sdipr.core.interceptor.GoogleLogin;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
@@ -39,7 +39,7 @@ public class ProfileController extends AbstractController {
     /**
      * Active and valid Credential from {@link cz.muni.fi.sdipr.core.GoogleLoginService} is required to run this method.
      */
-    @Login
+    @GoogleLogin
     @Override
     public void process() throws IOException {
         Plus plus = new Plus.Builder(new NetHttpTransport(), new JacksonFactory(), googleLoginService.getCredential())

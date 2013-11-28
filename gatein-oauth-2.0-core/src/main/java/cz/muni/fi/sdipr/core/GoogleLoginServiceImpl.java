@@ -37,7 +37,7 @@ public class GoogleLoginServiceImpl implements Serializable, GoogleLoginService 
     private Credential credential;
 //    private PortletSession session;
 
-    public GoogleLoginServiceImpl() throws GoogleOAuthLoginException {
+    public GoogleLoginServiceImpl() {
         System.out.println("@GoogleLoginService#Construct");
     }
 
@@ -53,10 +53,8 @@ public class GoogleLoginServiceImpl implements Serializable, GoogleLoginService 
             CLIENT_ID = properties.getProperty("default.client.id");
             CLIENT_SECRET = properties.getProperty("default.client.secret");
         } catch (Exception e) {
-            throw new GoogleOAuthLoginException();
+            throw new GoogleOAuthLoginException(e);
         }
-
-        //todo try to get accessToken from portal
     }
 
     @Override
@@ -224,10 +222,14 @@ public class GoogleLoginServiceImpl implements Serializable, GoogleLoginService 
     }
 
     @Override
-    public void logout() throws IOException {
+    public void logout() throws GoogleOAuthLoginException {
         this.credential = null;
         FacesContext ctx = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) ctx.getExternalContext().getRequest();
-        ctx.getExternalContext().redirect(request.getRequestURL().toString());
+        try {
+            ctx.getExternalContext().redirect(request.getRequestURL().toString());
+        } catch (IOException e) {
+            throw new GoogleOAuthLoginException("Unable to logout.", e);
+        }
     }
 }

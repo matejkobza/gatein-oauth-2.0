@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title><h:outputText value="#{pageTitle}"/></title>
+    <ui:insert name="head"></ui:insert>
+</h:head>
+<h:body>
+    <f:facet name="last">
+        <h:outputStylesheet name="style.css" library="css"/>
+        <h:outputStylesheet name="zocial.css" library="css"/>
+        <link href="http://fonts.googleapis.com/css?family=Pompiere" rel="stylesheet" type="text/css"/>
+    </f:facet>
+
+    <p:outputPanel styleClass="content">
+        <h:form>
+            <h:panelGroup rendered="#{!facebookLoginBean.authenticated}" styleClass="loginPanel">
+                <h:graphicImage name="gatein_logo.png" library="img"/>
+
+                <h1>Welcome</h1>
+                <h:commandLink actionListener="#{facebookLoginBean.doRedirect}"
+                               value="#{res['button.signInWithFacebook']}"
+                               styleClass="zocial facebook"/>
+            </h:panelGroup>
+        </h:form>
+        <p:outputPanel rendered="#{facebookLoginBean.authenticated}">
+            <h1><h:outputText value="#{title}"/></h1>
+            <h:form>
+                <p:menu styleClass="menu">
+                    <p:menuitem value="#{res['cz.muni.fi.sdipr.facebook.menu.profile']}" icon="ui-icon-person"
+                                action="/faces/profile.xhtml?faces-redirect=true"/>
+                    <p:menuitem value="#{res['cz.muni.fi.sdipr.facebook.menu.events']}" icon="ui-icon-flag"
+                                action="/faces/events.xhtml?faces-redirect=true"/>
+                    <p:menuitem value="#{res['cz.muni.fi.sdipr.facebook.menu.logout']}" icon="ui-icon-power"
+                                actionListener="#{facebookLoginBean.logout}"/>
+                </p:menu>
+            </h:form>
+            <p:panel styleClass="float-left no-border">
+                <ui:insert name="content"></ui:insert>
+            </p:panel>
+        </p:outputPanel>
+    </p:outputPanel>
+</h:body>
+</html>

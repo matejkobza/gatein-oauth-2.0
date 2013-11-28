@@ -10,7 +10,7 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.ParentReference;
 import cz.muni.fi.sdipr.core.GoogleOAuthLoginException;
-import cz.muni.fi.sdipr.core.interceptor.Login;
+import cz.muni.fi.sdipr.core.interceptor.GoogleLogin;
 import org.primefaces.model.UploadedFile;
 
 import javax.enterprise.context.SessionScoped;
@@ -31,7 +31,7 @@ import java.util.List;
  * Date: 7.11.2013
  * Time: 12:01
  */
-@Login
+@GoogleLogin
 @Named
 @SessionScoped
 public class DriveController extends AbstractController {

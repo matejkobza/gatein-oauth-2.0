@@ -2,7 +2,7 @@ package cz.muni.fi.sdipr.web.controller;
 
 import cz.muni.fi.sdipr.core.GoogleLoginService;
 import cz.muni.fi.sdipr.core.GoogleOAuthLoginException;
-import cz.muni.fi.sdipr.core.interceptor.Login;
+import cz.muni.fi.sdipr.core.interceptor.GoogleLogin;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public abstract class AbstractController implements Serializable {
         }
     }
 
-    @Login
-    public abstract void  process() throws Exception;
+    @GoogleLogin
+    public abstract void process() throws Exception;
 
 }

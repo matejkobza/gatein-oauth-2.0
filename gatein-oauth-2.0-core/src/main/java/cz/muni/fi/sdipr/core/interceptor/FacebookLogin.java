@@ -10,11 +10,11 @@ import java.lang.annotation.Target;
 /**
  * Created with IntelliJ IDEA.
  * User: matejkobza
- * Date: 14.11.2013
- * Time: 20:12
+ * Date: 26.11.2013
+ * Time: 12:11
  */
 @InterceptorBinding
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Qualifier
-public @interface Login { }
+public @interface FacebookLogin {}

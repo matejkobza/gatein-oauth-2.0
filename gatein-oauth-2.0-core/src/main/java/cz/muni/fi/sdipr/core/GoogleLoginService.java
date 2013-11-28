@@ -18,7 +18,7 @@ import java.util.List;
 public interface GoogleLoginService {
 
     /**
-     * Login to google services
+     * GoogleLogin to google services
      * @throws GoogleOAuthLoginException
      */
     public void login() throws GoogleOAuthLoginException;
@@ -41,5 +41,5 @@ public interface GoogleLoginService {
 
     public Credential getCredential();
 
-    void logout() throws IOException;
+    public void logout() throws GoogleOAuthLoginException;
 }

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
+<ui:composition template="/resources/templates/fmain.xhtml">
+    <ui:param name="pageTitle" value="Facebook OAuth 2 Demo"/>
+    <ui:param name="title" value="Facebook events"/>
+    <ui:define name="head">
+        #{eventsController.setScopes()}
+        <c:if test="#{facebookLoginBean.authenticated}">
+            #{eventsController.process()}
+        </c:if>
+    </ui:define>
+    <ui:define name="content">
+        <h:form>
+            <p:panel styleClass="pnlEvents">
+                <p:dialog id="dlgNewEvent" header="#{res['cz.muni.fi.sdipr.facebook.events.newEvent']}" widgetVar="dlg"
+                          modal="true">
+                    <p:outputPanel styleClass="row">
+                        <p:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.name']}"/>
+                        <p:inputText value="#{eventsController.event.name}"/>
+                    </p:outputPanel>
+
+                    <p:outputPanel styleClass="row">
+                        <p:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.description']}"/>
+                    </p:outputPanel>
+                    <p:outputPanel>
+                        <p:inputTextarea value="#{eventsController.event.description}"/>
+                    </p:outputPanel>
+
+                    <p:outputPanel styleClass="row">
+                        <p:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.where']}"/>
+                        <p:autoComplete minQueryLength="3" value="#{eventsController.event.location}"
+                                        completeMethod="#{eventsController.complete}"/>
+                    </p:outputPanel>
+
+                    <p:outputPanel styleClass="row">
+                        <p:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.dateFrom']}"/>
+                        <p:calendar pattern="MM/dd/yyyy HH:mm:ss" stepHour="1" stepMinute="30"
+                                    value="#{eventsController.event.startTime}"/>
+                    </p:outputPanel>
+
+                    <p:outputPanel styleClass="row">
+                        <p:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.dateTo']}"/>
+                        <p:calendar pattern="MM/dd/yyyy HH:mm:ss" stepHour="1" stepMinute="30"
+                                    value="#{eventsController.event.endTime}"/>
+                    </p:outputPanel>
+
+
+                    <p:outputPanel styleClass="row">
+                        <p:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.privacy']}"/>
+                        <p:selectOneMenu value="#{eventsController.event.privacyType}">
+                            <f:selectItem itemValue="SECRET" itemLabel="Invite only"/>
+                            <f:selectItem itemValue="FRIENDS" itemLabel="Friends of Guests"/>
+                            <f:selectItem itemValue="OPEN" itemLabel="Public"/>
+                        </p:selectOneMenu>
+                    </p:outputPanel>
+
+                    <!-- Dont know what this facebook use for
+                    <p:outputPanel styleClass="row">
+                        <h:selectBooleanCheckbox/>
+                        <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.guestsCanInviteFriends']}"/>
+                    </p:outputPanel>-->
+
+                    <p:outputPanel>
+                        <p:commandButton value="#{res['button.cancel']}" onclick="PF('dlg').hide();"
+                                         actionListener="#{eventsController.reset}" styleClass="float-right"
+                                         update="@form:dlgNewEvent"/>
+                        <p:commandButton value="#{res['button.save']}"
+                                         actionListener="#{eventsController.saveOrUpdateEvent}"
+                                         oncomplete="PF('dlg').hide();" styleClass="float-right"
+                                         update="@form:tblEvents"/>
+                    </p:outputPanel>
+                </p:dialog>
+
+                <p:commandButton value="#{res['button.new']}" onclick="PF('dlg').show();"
+                                 actionListener="#{eventsController.reset}"/>
+
+                <p:dataTable id="tblEvents" value="#{eventsController.events}" var="event">
+                    <p:column headerText="#{res['cz.muni.fi.sdipr.facebook.events.name']}">
+                        <h:outputLink value="http://www.facebook.com/events/#{event.eid}" title="#{event.name}">
+                            <h:outputText value="#{event.name}"/>
+                        </h:outputLink>
+                    </p:column>
+                    <p:column headerText="#{res['cz.muni.fi.sdipr.facebook.events.date']}">
+                        <h:outputText value="#{event.startTime}">
+                            <f:convertDateTime pattern="dd.MM.YYYY HH:mm:ss"/>
+                        </h:outputText><h:outputText value=" - " rendered="#{event.endTime ne null}"/><h:outputText
+                            value="#{event.endTime}"
+                            rendered="#{event.endTime ne null}">
+                        <f:convertDateTime pattern="dd.MM.YYYY HH:mm:ss"/>
+                    </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{res['cz.muni.fi.sdipr.facebook.events.rsvpStatus']}">
+                        <h:outputText value="#{event.status}"/>
+                    </p:column>
+                    <p:column headerText="#{res['cz.muni.fi.sdipr.facebook.events.action']}">
+                        <p:commandButton value="#{res['button.yes']}"
+                                         actionListener="#{eventsController.rsvpEventAsAttending(event.eid)}"/>
+                        <p:commandButton value="#{res['button.no']}"
+                                         actionListener="#{eventsController.rsvpEventAsDeclined(event.eid)}"/>
+                        <p:commandButton value="#{res['cz.muni.fi.sdipr.facebook.events.maybe']}"
+                                         actionListener="#{eventsController.rsvpEventAsMaybe(event.eid)}"/>
+                        <h:panelGroup rendered="#{eventsController.isUserEvent(event)}">
+                            <p:commandButton value="#{res['button.edit']}"
+                                             actionListener="#{eventsController.loadEvent(event.eid)}"
+                                             oncomplete="PF('dlg').show()" update="@form:dlgNewEvent"/>
+                            <p:commandButton value="#{res['button.delete']}"
+                                             actionListener="#{eventsController.deleteEvent(event.eid)}"
+                                             update="@form:tblEvents"/>
+                        </h:panelGroup>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>

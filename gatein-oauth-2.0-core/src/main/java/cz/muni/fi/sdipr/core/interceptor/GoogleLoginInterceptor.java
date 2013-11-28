@@ -17,8 +17,8 @@ import java.io.Serializable;
  * Time: 19:57
  */
 @Interceptor
-@Login
-public class LoginInterceptor implements Serializable {
+@GoogleLogin
+public class GoogleLoginInterceptor implements Serializable {
 
     private static final long serialVersionUID = 3400564842493501051L;
 
