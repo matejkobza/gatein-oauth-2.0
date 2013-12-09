@@ -1,4 +1,4 @@
-package cz.muni.fi.sdipr.web.google;
+package cz.muni.fi.sdipr.web.google.controller;
 
 import com.google.api.client.http.FileContent;
 import com.google.api.client.http.GenericUrl;
@@ -37,7 +37,7 @@ public class DriveController extends AbstractController {
 
     private static final long serialVersionUID = -7611041534898427988L;
     private Drive drive;
-    private List<File> files;
+    private List<File> files = new ArrayList<File>();
     private Map<String, Boolean> checked = new HashMap<String, Boolean>();
 
     public DriveController() throws GoogleOAuthLoginException {
@@ -81,7 +81,7 @@ public class DriveController extends AbstractController {
     }
 
     public boolean isFolder(File file) {
-        if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
+        if (file.getMimeType().equals("application/vnd.controller-apps.folder")) {
             return true;
         }
         return false;

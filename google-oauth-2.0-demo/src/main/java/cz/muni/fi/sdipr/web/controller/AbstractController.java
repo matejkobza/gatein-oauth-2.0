@@ -31,7 +31,7 @@ public abstract class AbstractController implements Serializable {
         Properties props = new Properties();
         try {
             props.load(getClass().getClassLoader().getResourceAsStream("cz/muni/fi/sdipr/web/application.properties"));
-            applicationName = props.getProperty("google.application.name");
+            applicationName = props.getProperty("controller.application.name");
         } catch (IOException e) {
             throw new GoogleOAuthLoginException("Unable to initialize", e);
         }

@@ -1,4 +1,4 @@
-package cz.muni.fi.sdipr.web.google;
+package cz.muni.fi.sdipr.web.google.controller;
 
 import cz.muni.fi.sdipr.core.GoogleLoginService;
 import cz.muni.fi.sdipr.core.GoogleOAuthLoginException;
@@ -31,7 +31,7 @@ public abstract class AbstractController implements Serializable {
         Properties props = new Properties();
         try {
             props.load(getClass().getClassLoader().getResourceAsStream("cz/muni/fi/sdipr/web/application.properties"));
-            applicationName = props.getProperty("google.application.name");
+            applicationName = props.getProperty("controller.application.name");
         } catch (IOException e) {
             throw new GoogleOAuthLoginException("Unable to initialize", e);
         }

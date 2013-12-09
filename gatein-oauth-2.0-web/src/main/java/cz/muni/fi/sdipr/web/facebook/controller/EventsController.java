@@ -1,4 +1,4 @@
-package cz.muni.fi.sdipr.web.controller;
+package cz.muni.fi.sdipr.web.facebook.controller;
 
 import com.google.gson.Gson;
 import cz.muni.fi.sdipr.core.FacebookLoginService;
@@ -113,19 +113,29 @@ public class EventsController implements Serializable {
 
     private Event convertObjectToEvent(JSONObject object) throws FacebookException {
         Event event = gson.fromJson(object.toString(), Event.class);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        SimpleDateFormat sdfDateOnly = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            event.setStartTime(sdf.parse(object.getString("start_time")));
+            String startDateTime = object.getString("start_time");
+            if (startDateTime.length() > 10) {
+                event.setStartTime(sdfDateTime.parse(startDateTime));
+            } else if (startDateTime.length() < 11 && !startDateTime.isEmpty()) {
+                event.setStartTime(sdfDateOnly.parse(startDateTime));
+            }
         } catch (JSONException e) {
             throw new FacebookException("Unable to get field start_time.", e);
         } catch (ParseException e) {
             throw new FacebookException("Unable to parse field start_time.", e);
         }
         try {
-            String endTime = object.getString("end_time");
-            if (endTime != null) {
+            String endDateTime = object.getString("end_time");
+            if (endDateTime != null) {
                 try {
-                    event.setEndTime(sdf.parse(endTime));
+                    if (endDateTime.length() > 10) {
+                        event.setEndTime(sdfDateTime.parse(endDateTime));
+                    } else if (endDateTime.length() < 11 && !endDateTime.isEmpty()) {
+                        event.setEndTime(sdfDateOnly.parse(endDateTime));
+                    }
                 } catch (ParseException e) {
                     throw new FacebookException("Unable to parse field end_time.", e);
                 }

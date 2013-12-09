@@ -1,4 +1,4 @@
-package cz.muni.fi.sdipr.web.model;
+package cz.muni.fi.sdipr.web.facebook.model;
 
 /**
  * Created with IntelliJ IDEA.

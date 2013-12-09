@@ -1,5 +1,5 @@
 /**
- * http://javadoc.google-oauth-java-client.googlecode.com/hg/1.17.0-rc/com/google/api/client/auth/oauth2/package-summary.html
+ * http://javadoc.controller-oauth-java-client.googlecode.com/hg/1.17.0-rc/com/controller/api/client/auth/oauth2/package-summary.html
  *
  * These are the typical steps of the web server flow based on an authorization code, as specified in Authorization Code Grant:
  *

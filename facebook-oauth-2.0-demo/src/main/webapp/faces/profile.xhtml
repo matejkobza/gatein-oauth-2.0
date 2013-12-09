@@ -10,13 +10,28 @@
     <ui:param name="pageTitle" value="Facebook OAuth 2 Demo"/>
     <ui:param name="title" value="Facebook profile"/>
     <ui:define name="head">
-        #{eventsController.setScopes()}
+        #{profileController.setScopes()}
         <c:if test="#{facebookLoginBean.authenticated}">
-            #{eventsController.process()}
+            #{profileController.process()}
         </c:if>
     </ui:define>
     <ui:define name="content">
-              My profile goes here
+        <h:form>
+            <p:panel styleClass="pnlProfile">
+                <h:panelGroup>
+                    <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.profile.status']}"/>
+                    <p:inputTextarea value="#{profileController.statusMessage}"/>
+                    <p:commandButton value="#{res['button.post']}" actionListener="#{profileController.updateStatus}"/>
+                </h:panelGroup>
+                <h:panelGroup>
+                    <p:dataTable value="#{profileController.posts}" var="post">
+                        <p:column headerText="Posts">
+                            <h:outputText value="#{post.message}"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGroup>
+            </p:panel>
+        </h:form>
     </ui:define>
 </ui:composition>
 </html>

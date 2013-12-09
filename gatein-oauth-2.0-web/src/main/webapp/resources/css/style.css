@@ -161,7 +161,7 @@ input[type="text"] {
     margin: 0px !important;
 }
 
-/* google drive portlet */
+/* GOOGLE DRIVE */
 .driveContent {
     padding: 10px;
     font-size: 12px !important;
@@ -232,7 +232,7 @@ input[type="text"] {
     padding-left: 5px;
 }
 
-/* richfaces file upload fix */
+/* richfaces file upload customization */
 .driveContent .rf-fu, .driveContent .rf-fu-hdr {
     background: none !important;
     border: none !important;
@@ -266,5 +266,36 @@ input[type="text"] {
     border-radius: 3px !important;
     background-position: 0px 0px !important;
     padding: 5px !important;
+
+}
+
+/* FACEBOOK EVENTS */
+.eventsContent {
+    padding: 10px;
+}
+
+.eventsContent .tableEvents {
+    border: 0px;
+    /*float: left;*/
+    width: 700px;
+    margin-left: 10px;
+    margin-bottom: 5px !important;
+}
+
+.eventsContent .tableEvents tr th {
+    text-transform: uppercase !important;
+}
+
+.eventsContent .tableEvents tr th, .eventsContent .tableEvents tr td {
+    background: none;
+    border: 0px;
+    border-bottom: 1px #DFDFDF solid;
+    padding: 2px !important;
+    padding-top: 3px !important;
+    vertical-align: middle !important;
+}
+
+/* FACEBOOK INBOX */
+.inboxContent {
 
 }

@@ -65,8 +65,6 @@ public class GoogleLoginServiceImpl implements Serializable, GoogleLoginService 
             return;
         }
         System.out.println("@GoogleLoginService#login");
-        FacesContext ctx = FacesContext.getCurrentInstance();
-        // todo - this will need change in portlet
         PortalRequestContext prc = PortalRequestContext.getCurrentInstance();
         HttpServletRequest request = prc.getRequest();
 

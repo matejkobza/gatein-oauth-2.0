@@ -1,0 +1,154 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:rich="http://richfaces.org/rich"
+        xmlns:a4j="http://richfaces.org/a4j"
+        >
+    <ui:composition template="/resources/templates/fmain.xhtml">
+        <ui:param name="pageTitle" value="Facebook OAuth 2 Demo"/>
+        <ui:param name="title" value="Facebook events"/>
+        <ui:define name="head">
+            #{eventsController.setScopes()}
+            <c:if test="#{facebookLoginBean.authenticated}">
+                #{eventsController.process()}
+            </c:if>
+        </ui:define>
+        <ui:define name="content">
+            <h:form>
+                <rich:panel styleClass="eventsContent">
+                    <rich:popupPanel id="dlgNewEvent" header="#{res['cz.muni.fi.sdipr.facebook.events.newEvent']}"
+                                     widgetVar="dlg"
+                                     modal="true">
+                        <rich:panel styleClass="row">
+                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.name']}"/>
+                            <h:inputText value="#{eventsController.event.name}"/>
+                        </rich:panel>
+
+                        <rich:panel styleClass="row">
+                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.description']}"/>
+                        </rich:panel>
+                        <rich:panel>
+                            <h:inputTextarea value="#{eventsController.event.description}"/>
+                        </rich:panel>
+
+                        <rich:panel styleClass="row">
+                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.where']}"/>
+                            <rich:autocomplete minQueryLength="3" value="#{eventsController.event.location}"
+                                               completeMethod="#{eventsController.complete}"/>
+                        </rich:panel>
+
+                        <rich:panel styleClass="row">
+                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.dateFrom']}"/>
+                            <rich:calendar pattern="MM/dd/yyyy HH:mm:ss" stepHour="1" stepMinute="30"
+                                           value="#{eventsController.event.startTime}"/>
+                        </rich:panel>
+
+                        <rich:panel styleClass="row">
+                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.dateTo']}"/>
+                            <rich:calendar pattern="MM/dd/yyyy HH:mm:ss" stepHour="1" stepMinute="30"
+                                           value="#{eventsController.event.endTime}"/>
+                        </rich:panel>
+
+
+                        <rich:panel styleClass="row">
+                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.privacy']}"/>
+                            <h:selectOneMenu value="#{eventsController.event.privacyType}">
+                                <f:selectItem itemValue="SECRET" itemLabel="Invite only"/>
+                                <f:selectItem itemValue="FRIENDS" itemLabel="Friends of Guests"/>
+                                <f:selectItem itemValue="OPEN" itemLabel="Public"/>
+                            </h:selectOneMenu>
+                        </rich:panel>
+
+                        <!-- Dont know what this facebook use for
+                        <p:outputPanel styleClass="row">
+                            <h:selectBooleanCheckbox/>
+                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.guestsCanInviteFriends']}"/>
+                        </p:outputPanel>-->
+
+                        <rich:panel>
+                            <a4j:commandButton value="#{res['button.cancel']}"
+                                               onclick="#{rich:component('dlgNewEvent')}.hide()"
+                                               actionListener="#{eventsController.reset}" styleClass="float-right"
+                                               render="@form:dlgNewEvent"/>
+                            <a4j:commandButton value="#{res['button.save']}"
+                                               actionListener="#{eventsController.saveOrUpdateEvent}"
+                                               oncomplete="#{rich:component('dlgNewEvent').hide()}"
+                                               styleClass="float-right"
+                                               render="@form:tblEvents"/>
+                        </rich:panel>
+                    </rich:popupPanel>
+
+                    <rich:panel styleClass="float-left padding10">
+                        <a4j:commandButton value="#{res['button.new']}"
+                                           actionListener="#{eventsController.reset}"
+                                           styleClass="button">
+                            <rich:componentControl target="dlgNewEvent" operation="show"/>
+                        </a4j:commandButton>
+                    </rich:panel>
+
+                    <br class="clear"/>
+
+                    <rich:dataTable id="tblEvents" value="#{eventsController.events}" var="event"
+                                    styleClass="tableEvents">
+                        <rich:column styleClass="align-left">
+                            <f:facet name="header">
+                                <h:outputText value="#{res['cz.muni.fi.sdipr.facebook.events.name']}"/>
+                            </f:facet>
+                            <h:outputLink value="http://www.facebook.com/events/#{event.eid}" title="#{event.name}"
+                                          target="_blank">
+                                <h:outputText value="#{event.name}"/>
+                            </h:outputLink>
+                        </rich:column>
+                        <rich:column styleClass="align-center">
+                            <f:facet name="header">
+                                <h:outputText value="#{res['cz.muni.fi.sdipr.facebook.events.date']}"/>
+                            </f:facet>
+                            <h:outputText value="#{event.startTime}">
+                                <f:convertDateTime pattern="dd.MM.YYYY HH:mm:ss"/>
+                            </h:outputText><h:outputText value=" - " rendered="#{event.endTime ne null}"/><h:outputText
+                                value="#{event.endTime}"
+                                rendered="#{event.endTime ne null}">
+                            <f:convertDateTime pattern="dd.MM.YYYY HH:mm:ss"/>
+                        </h:outputText>
+                        </rich:column>
+                        <rich:column styleClass="align-center">
+                            <f:facet name="header">
+                                #{res['cz.muni.fi.sdipr.facebook.events.rsvpStatus']}
+                            </f:facet>
+                            <h:outputText value="#{event.status}"/>
+                        </rich:column>
+                        <rich:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{res['cz.muni.fi.sdipr.facebook.events.action']}"/>
+                            </f:facet>
+                            <a4j:commandButton value="#{res['button.yes']}"
+                                               actionListener="#{eventsController.rsvpEventAsAttending(event.eid)}"
+                                               render="tblEvents"
+                                               styleClass="button"/>
+                            <a4j:commandButton value="#{res['button.no']}"
+                                               actionListener="#{eventsController.rsvpEventAsDeclined(event.eid)}"
+                                               render="tblEvents"
+                                               styleClass="button"/>
+                            <a4j:commandButton value="#{res['cz.muni.fi.sdipr.facebook.events.maybe']}"
+                                               actionListener="#{eventsController.rsvpEventAsMaybe(event.eid)}"
+                                               render="tblEvents"
+                                               styleClass="button"/>
+                            <h:panelGroup rendered="#{eventsController.isUserEvent(event)}">
+                                <a4j:commandButton value="#{res['button.edit']}"
+                                                   actionListener="#{eventsController.loadEvent(event.eid)}"
+                                                   oncomplete="PF('dlg').show()" render="@form:dlgNewEvent"
+                                                   styleClass="button"/>
+                                <a4j:commandButton value="#{res['button.delete']}"
+                                                   actionListener="#{eventsController.deleteEvent(event.eid)}"
+                                                   render="@form:tblEvents"
+                                                   styleClass="button"/>
+                            </h:panelGroup>
+                        </rich:column>
+                    </rich:dataTable>
+                </rich:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</f:view>

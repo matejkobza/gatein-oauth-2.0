@@ -83,7 +83,7 @@ public class DriveController extends AbstractController {
     }
 
     public boolean isFolder(File file) {
-        if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
+        if (file.getMimeType().equals("application/vnd.controller-apps.folder")) {
             return true;
         }
         return false;

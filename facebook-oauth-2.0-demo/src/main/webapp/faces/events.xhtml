@@ -82,7 +82,8 @@
 
                 <p:dataTable id="tblEvents" value="#{eventsController.events}" var="event">
                     <p:column headerText="#{res['cz.muni.fi.sdipr.facebook.events.name']}">
-                        <h:outputLink value="http://www.facebook.com/events/#{event.eid}" title="#{event.name}">
+                        <h:outputLink value="http://www.facebook.com/events/#{event.eid}" title="#{event.name}"
+                                      target="_blank">
                             <h:outputText value="#{event.name}"/>
                         </h:outputLink>
                     </p:column>
@@ -100,11 +101,14 @@
                     </p:column>
                     <p:column headerText="#{res['cz.muni.fi.sdipr.facebook.events.action']}">
                         <p:commandButton value="#{res['button.yes']}"
-                                         actionListener="#{eventsController.rsvpEventAsAttending(event.eid)}"/>
+                                         actionListener="#{eventsController.rsvpEventAsAttending(event.eid)}"
+                                         update="@form:tblEvents"/>
                         <p:commandButton value="#{res['button.no']}"
-                                         actionListener="#{eventsController.rsvpEventAsDeclined(event.eid)}"/>
+                                         actionListener="#{eventsController.rsvpEventAsDeclined(event.eid)}"
+                                         update="@form:tblEvents"/>
                         <p:commandButton value="#{res['cz.muni.fi.sdipr.facebook.events.maybe']}"
-                                         actionListener="#{eventsController.rsvpEventAsMaybe(event.eid)}"/>
+                                         actionListener="#{eventsController.rsvpEventAsMaybe(event.eid)}"
+                                         update="@form:tblEvents"/>
                         <h:panelGroup rendered="#{eventsController.isUserEvent(event)}">
                             <p:commandButton value="#{res['button.edit']}"
                                              actionListener="#{eventsController.loadEvent(event.eid)}"

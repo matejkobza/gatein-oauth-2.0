@@ -5,6 +5,8 @@ import facebook4j.FacebookException;
 import facebook4j.FacebookFactory;
 import facebook4j.auth.AccessToken;
 import facebook4j.conf.ConfigurationBuilder;
+import org.apache.commons.lang.StringUtils;
+import org.exoplatform.portal.application.PortalRequestContext;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -62,11 +64,40 @@ public class FacebookLoginServiceImpl implements Serializable, FacebookLoginServ
         }
     }
 
+    /**
+     * WEB Application
+     *
+     * @throws FacebookOAuthLoginException
+     */
+//    @Override
+//    public void login() throws FacebookOAuthLoginException {
+//        FacesContext ctx = FacesContext.getCurrentInstance();
+//        HttpServletRequest req = (HttpServletRequest) ctx.getExternalContext().getRequest();
+//        String oauthCode = req.getParameter("code");
+//
+//        try {
+//            accessToken = facebook.getOAuthAccessToken(oauthCode);
+//        } catch (FacebookException e) {
+//            throw new FacebookOAuthLoginException("Unable to acquire access token.", e);
+//        }
+//
+//        try {
+//            ctx.getExternalContext().redirect(pointOfOrigin);
+//        } catch (IOException e) {
+//            throw new FacebookOAuthLoginException("Unable to return for point of origin.", e);
+//        }
+//
+//    }
     @Override
     public void login() throws FacebookOAuthLoginException {
-        FacesContext ctx = FacesContext.getCurrentInstance();
-        HttpServletRequest req = (HttpServletRequest) ctx.getExternalContext().getRequest();
-        String oauthCode = req.getParameter("code");
+        if (accessToken != null) {
+            return;
+        }
+        System.out.println("@FacebookLoginService#login");
+        PortalRequestContext prc = PortalRequestContext.getCurrentInstance();
+        HttpServletRequest request = prc.getRequest();
+
+        String oauthCode = request.getParameter("code");
 
         try {
             accessToken = facebook.getOAuthAccessToken(oauthCode);
@@ -75,11 +106,10 @@ public class FacebookLoginServiceImpl implements Serializable, FacebookLoginServ
         }
 
         try {
-            ctx.getExternalContext().redirect(pointOfOrigin);
+            prc.sendRedirect(pointOfOrigin);
         } catch (IOException e) {
             throw new FacebookOAuthLoginException("Unable to return for point of origin.", e);
         }
-
     }
 
     @Override
@@ -112,8 +142,21 @@ public class FacebookLoginServiceImpl implements Serializable, FacebookLoginServ
         }
     }
 
+    /**
+     * WEB Application
+     * @return
+     */
+//    @Override
+//    public boolean isAuthenticated() {
+//        return accessToken != null;
+//    }
+
     @Override
-    public boolean isAuthenticated() {
+    public boolean isAuthenticated() throws FacebookOAuthLoginException {
+        PortalRequestContext prc = PortalRequestContext.getCurrentInstance();
+        if (prc.getRequestParameter("code") != null) {
+            this.login();
+        }
         return accessToken != null;
     }
 
@@ -136,7 +179,7 @@ public class FacebookLoginServiceImpl implements Serializable, FacebookLoginServ
     public void logout() throws FacebookOAuthLoginException {
         accessToken = null;
         FacesContext ctx = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest)ctx.getExternalContext().getRequest();
+        HttpServletRequest request = (HttpServletRequest) ctx.getExternalContext().getRequest();
         try {
             ctx.getExternalContext().redirect(request.getRequestURL().toString());
         } catch (IOException e) {

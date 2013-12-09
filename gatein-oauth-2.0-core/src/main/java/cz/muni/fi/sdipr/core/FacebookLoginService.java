@@ -14,7 +14,7 @@ public interface FacebookLoginService {
 
     public void doRedirect() throws FacebookOAuthLoginException;
 
-    public boolean isAuthenticated();
+    public boolean isAuthenticated() throws FacebookOAuthLoginException;
 
     public void addScope(String permission);
 
