@@ -277,7 +277,6 @@ input[type="text"] {
 .eventsContent .tableEvents {
     border: 0px;
     /*float: left;*/
-    width: 700px;
     margin-left: 10px;
     margin-bottom: 5px !important;
 }
@@ -293,6 +292,31 @@ input[type="text"] {
     padding: 2px !important;
     padding-top: 3px !important;
     vertical-align: middle !important;
+}
+
+.eventsPopup .row {
+    padding: 5px !important;
+}
+
+.eventsPopup .row .label {
+    display: block;
+    width: 70px;
+    float: left;
+}
+
+.eventsPopup .row .value {
+    display: block;
+    float: left;
+    width: 270px;
+    margin-bottom: 5px;
+}
+
+.eventsPopup .row .value .rf-cal-inp {
+    width: 250px;
+}
+
+.eventsPopup .row .value .rf-au-inp {
+    width: 100%;
 }
 
 /* FACEBOOK INBOX */

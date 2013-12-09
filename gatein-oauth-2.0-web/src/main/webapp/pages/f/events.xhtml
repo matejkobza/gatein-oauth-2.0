@@ -20,41 +20,44 @@
                 <rich:panel styleClass="eventsContent">
                     <rich:popupPanel id="dlgNewEvent" header="#{res['cz.muni.fi.sdipr.facebook.events.newEvent']}"
                                      widgetVar="dlg"
-                                     modal="true">
+                                     modal="true"
+                                     styleClass="eventsPopup" height="310">
                         <rich:panel styleClass="row">
-                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.name']}"/>
-                            <h:inputText value="#{eventsController.event.name}"/>
+                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.name']}" styleClass="label"/>
+                            <h:inputText value="#{eventsController.event.name}" styleClass="value"/>
                         </rich:panel>
 
                         <rich:panel styleClass="row">
-                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.description']}"/>
-                        </rich:panel>
-                        <rich:panel>
-                            <h:inputTextarea value="#{eventsController.event.description}"/>
+                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.description']}"
+                                           styleClass="label"/>
+                            <h:inputTextarea value="#{eventsController.event.description}" styleClass="value"/>
                         </rich:panel>
 
                         <rich:panel styleClass="row">
-                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.where']}"/>
+                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.where']}" styleClass="label"/>
                             <rich:autocomplete minQueryLength="3" value="#{eventsController.event.location}"
-                                               completeMethod="#{eventsController.complete}"/>
+                                               completeMethod="#{eventsController.complete}" styleClass="value"/>
                         </rich:panel>
 
                         <rich:panel styleClass="row">
-                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.dateFrom']}"/>
+                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.dateFrom']}"
+                                           styleClass="label"/>
                             <rich:calendar pattern="MM/dd/yyyy HH:mm:ss" stepHour="1" stepMinute="30"
-                                           value="#{eventsController.event.startTime}"/>
+                                           value="#{eventsController.event.startTime}" styleClass="value"/>
                         </rich:panel>
 
                         <rich:panel styleClass="row">
-                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.dateTo']}"/>
+                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.dateTo']}"
+                                           styleClass="label"/>
                             <rich:calendar pattern="MM/dd/yyyy HH:mm:ss" stepHour="1" stepMinute="30"
-                                           value="#{eventsController.event.endTime}"/>
+                                           value="#{eventsController.event.endTime}" styleClass="value"/>
                         </rich:panel>
 
 
                         <rich:panel styleClass="row">
-                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.privacy']}"/>
-                            <h:selectOneMenu value="#{eventsController.event.privacyType}">
+                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.privacy']}"
+                                           styleClass="label"/>
+                            <h:selectOneMenu value="#{eventsController.event.privacyType}" styleClass="value">
                                 <f:selectItem itemValue="SECRET" itemLabel="Invite only"/>
                                 <f:selectItem itemValue="FRIENDS" itemLabel="Friends of Guests"/>
                                 <f:selectItem itemValue="OPEN" itemLabel="Public"/>
@@ -70,12 +73,13 @@
                         <rich:panel>
                             <a4j:commandButton value="#{res['button.cancel']}"
                                                onclick="#{rich:component('dlgNewEvent')}.hide()"
-                                               actionListener="#{eventsController.reset}" styleClass="float-right"
+                                               actionListener="#{eventsController.reset}"
+                                               styleClass="float-right button"
                                                render="@form:dlgNewEvent"/>
                             <a4j:commandButton value="#{res['button.save']}"
                                                actionListener="#{eventsController.saveOrUpdateEvent}"
                                                oncomplete="#{rich:component('dlgNewEvent').hide()}"
-                                               styleClass="float-right"
+                                               styleClass="float-right button"
                                                render="@form:tblEvents"/>
                         </rich:panel>
                     </rich:popupPanel>
@@ -94,7 +98,8 @@
                                     styleClass="tableEvents">
                         <rich:column styleClass="align-left">
                             <f:facet name="header">
-                                <h:outputText value="#{res['cz.muni.fi.sdipr.facebook.events.name']}"/>
+                                <h:outputText value="#{res['cz.muni.fi.sdipr.facebook.events.name']}"
+                                              styleClass="float-left"/>
                             </f:facet>
                             <h:outputLink value="http://www.facebook.com/events/#{event.eid}" title="#{event.name}"
                                           target="_blank">
