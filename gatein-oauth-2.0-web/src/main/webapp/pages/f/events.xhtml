@@ -18,43 +18,50 @@
         <ui:define name="content">
             <h:form>
                 <rich:panel styleClass="eventsContent">
+                    <rich:messages id="msgs" ajaxRendered="true" globalOnly="false" rendered="true"/>
+
                     <rich:popupPanel id="dlgNewEvent" header="#{res['cz.muni.fi.sdipr.facebook.events.newEvent']}"
                                      widgetVar="dlg"
                                      modal="true"
                                      styleClass="eventsPopup" height="310">
-                        <rich:panel styleClass="row">
+
+
+                        <a4j:outputPanel styleClass="row">
                             <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.name']}" styleClass="label"/>
                             <h:inputText value="#{eventsController.event.name}" styleClass="value"/>
-                        </rich:panel>
+                        </a4j:outputPanel>
 
-                        <rich:panel styleClass="row">
+                        <a4j:outputPanel styleClass="row">
                             <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.description']}"
                                            styleClass="label"/>
                             <h:inputTextarea value="#{eventsController.event.description}" styleClass="value"/>
-                        </rich:panel>
+                        </a4j:outputPanel>
 
-                        <rich:panel styleClass="row">
+                        <a4j:outputPanel styleClass="row">
                             <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.where']}" styleClass="label"/>
-                            <rich:autocomplete minQueryLength="3" value="#{eventsController.event.location}"
-                                               completeMethod="#{eventsController.complete}" styleClass="value"/>
-                        </rich:panel>
+                            <rich:autocomplete mode="cachedAjax" minChars="2" value="#{eventsController.event.location}"
+                                               autocompleteMethod="#{eventsController.complete}"
+                                               styleClass="value"/>
+                        </a4j:outputPanel>
 
-                        <rich:panel styleClass="row">
+                        <a4j:outputPanel styleClass="row">
                             <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.dateFrom']}"
                                            styleClass="label"/>
-                            <rich:calendar pattern="MM/dd/yyyy HH:mm:ss" stepHour="1" stepMinute="30"
-                                           value="#{eventsController.event.startTime}" styleClass="value"/>
-                        </rich:panel>
+                            <rich:calendar value="#{eventsController.event.startTime}" datePattern="dd-MM-yy hh:mm"
+                                           popup="true" showApplyButton="true"
+                                           styleClass="value"/>
+                        </a4j:outputPanel>
 
-                        <rich:panel styleClass="row">
+                        <a4j:outputPanel styleClass="row">
                             <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.dateTo']}"
                                            styleClass="label"/>
-                            <rich:calendar pattern="MM/dd/yyyy HH:mm:ss" stepHour="1" stepMinute="30"
-                                           value="#{eventsController.event.endTime}" styleClass="value"/>
-                        </rich:panel>
+                            <rich:calendar value="#{eventsController.event.endTime}" datePattern="dd-MM-yy hh:mm"
+                                           popup="true" showApplyButton="true"
+                                           styleClass="value"/>
+                        </a4j:outputPanel>
 
 
-                        <rich:panel styleClass="row">
+                        <a4j:outputPanel styleClass="row">
                             <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.privacy']}"
                                            styleClass="label"/>
                             <h:selectOneMenu value="#{eventsController.event.privacyType}" styleClass="value">
@@ -62,31 +69,24 @@
                                 <f:selectItem itemValue="FRIENDS" itemLabel="Friends of Guests"/>
                                 <f:selectItem itemValue="OPEN" itemLabel="Public"/>
                             </h:selectOneMenu>
-                        </rich:panel>
+                        </a4j:outputPanel>
 
-                        <!-- Dont know what this facebook use for
-                        <p:outputPanel styleClass="row">
-                            <h:selectBooleanCheckbox/>
-                            <h:outputLabel value="#{res['cz.muni.fi.sdipr.facebook.events.guestsCanInviteFriends']}"/>
-                        </p:outputPanel>-->
-
-                        <rich:panel>
+                        <a4j:outputPanel>
                             <a4j:commandButton value="#{res['button.cancel']}"
                                                onclick="#{rich:component('dlgNewEvent')}.hide()"
                                                actionListener="#{eventsController.reset}"
                                                styleClass="float-right button"
-                                               render="@form:dlgNewEvent"/>
+                                               render="dlgNewEvent"/>
                             <a4j:commandButton value="#{res['button.save']}"
                                                actionListener="#{eventsController.saveOrUpdateEvent}"
-                                               oncomplete="#{rich:component('dlgNewEvent').hide()}"
+                                               oncomplete="#{rich:component('dlgNewEvent')}.hide()"
                                                styleClass="float-right button"
-                                               render="@form:tblEvents"/>
-                        </rich:panel>
+                                               render="tblEvents msgs"/>
+                        </a4j:outputPanel>
                     </rich:popupPanel>
 
                     <rich:panel styleClass="float-left padding10">
                         <a4j:commandButton value="#{res['button.new']}"
-                                           actionListener="#{eventsController.reset}"
                                            styleClass="button">
                             <rich:componentControl target="dlgNewEvent" operation="show"/>
                         </a4j:commandButton>

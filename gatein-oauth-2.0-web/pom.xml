@@ -41,7 +41,7 @@
         <dependency>
             <groupId>org.gatein</groupId>
             <artifactId>cdi-portlet-integration</artifactId>
-            <version>1.0.0.Final</version>
+            <version>1.0.3.Final</version>
             <scope>provided</scope>
         </dependency>
         <!-- General JSF dependencies for portlet development -->
@@ -51,6 +51,15 @@
             <groupId>org.jboss.portletbridge</groupId>
             <artifactId>portletbridge-extension-richfaces</artifactId>
         </dependency>
+
+        <!-- this is not working hovewer i think its important to add it, maybe later -->
+        <!--<dependency>
+            <groupId>org.jboss.portletbridge</groupId>
+            <artifactId>richfaces4-depchain</artifactId>
+            <version>3.2.1.Final</version>
+            <scope>provided</scope>
+        </dependency>-->
+
         <dependency>
             <groupId>org.richfaces.ui</groupId>
             <artifactId>richfaces-components-api</artifactId>

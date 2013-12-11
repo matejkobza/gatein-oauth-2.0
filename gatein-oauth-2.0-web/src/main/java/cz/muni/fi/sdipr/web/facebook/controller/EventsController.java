@@ -50,15 +50,10 @@ public class EventsController implements Serializable {
     @FacebookLogin
     public void process() throws FacebookException {
         facebook = facebookLoginService.getFacebook();
-
-        try {
-            loadEvents();
-        } catch (JSONException e) {
-            throw new FacebookException("Unable to load events.", e);
-        }
+        loadEvents();
     }
 
-    private void loadEvents() throws FacebookException, JSONException {
+    private void loadEvents() throws FacebookException {
         events = new ArrayList<Event>();
         userEvents = new ArrayList<Event>();
         // Events the current user is attending
@@ -72,42 +67,48 @@ public class EventsController implements Serializable {
 
         Map<String, JSONArray> results = facebook.executeMultiFQL(queries);
 
-        JSONArray attending = results.get("attending");
-        for (int i = 0; i < attending.length(); i++) {
-            JSONObject jsonObject = attending.getJSONObject(i);
-            Event event = convertObjectToEvent(jsonObject);
-            event.setStatus(EventStatus.ATTENDING);
-            events.add(event);
-        }
+        try {
 
-        JSONArray declined = results.get("declined");
-        for (int i = 0; i < declined.length(); i++) {
-            JSONObject jsonObject = declined.getJSONObject(i);
-            Event event = convertObjectToEvent(jsonObject);
-            event.setStatus(EventStatus.DECLINED);
-            events.add(event);
-        }
+            JSONArray attending = results.get("attending");
+            for (int i = 0; i < attending.length(); i++) {
+                JSONObject jsonObject = attending.getJSONObject(i);
+                Event event = convertObjectToEvent(jsonObject);
+                event.setStatus(EventStatus.ATTENDING);
+                events.add(event);
+            }
 
-        JSONArray unsure = results.get("unsure");
-        for (int i = 0; i < unsure.length(); i++) {
-            JSONObject jsonObject = unsure.getJSONObject(i);
-            Event event = convertObjectToEvent(jsonObject);
-            event.setStatus(EventStatus.UNSURE);
-            events.add(event);
-        }
+            JSONArray declined = results.get("declined");
+            for (int i = 0; i < declined.length(); i++) {
+                JSONObject jsonObject = declined.getJSONObject(i);
+                Event event = convertObjectToEvent(jsonObject);
+                event.setStatus(EventStatus.DECLINED);
+                events.add(event);
+            }
 
-        JSONArray notReplied = results.get("not_replied");
-        for (int i = 0; i < notReplied.length(); i++) {
-            Event event = convertObjectToEvent(notReplied.getJSONObject(i));
-            event.setStatus(EventStatus.NOT_REPLIED);
-            events.add(event);
-        }
+            JSONArray unsure = results.get("unsure");
+            for (int i = 0; i < unsure.length(); i++) {
+                JSONObject jsonObject = unsure.getJSONObject(i);
+                Event event = convertObjectToEvent(jsonObject);
+                event.setStatus(EventStatus.UNSURE);
+                events.add(event);
+            }
 
-        JSONArray users = results.get("users");
-        for (int i = 0; i < users.length(); i++) {
-            JSONObject jsonObject = users.getJSONObject(i);
-            Event event = gson.fromJson(jsonObject.toString(), Event.class);
-            userEvents.add(event);
+            JSONArray notReplied = results.get("not_replied");
+            for (int i = 0; i < notReplied.length(); i++) {
+                Event event = convertObjectToEvent(notReplied.getJSONObject(i));
+                event.setStatus(EventStatus.NOT_REPLIED);
+                events.add(event);
+            }
+
+            JSONArray users = results.get("users");
+            for (int i = 0; i < users.length(); i++) {
+                JSONObject jsonObject = users.getJSONObject(i);
+                Event event = gson.fromJson(jsonObject.toString(), Event.class);
+                userEvents.add(event);
+            }
+
+        } catch (JSONException ex) {
+            throw new FacebookException(ex);
         }
     }
 
@@ -118,27 +119,27 @@ public class EventsController implements Serializable {
         try {
             String startDateTime = object.getString("start_time");
             if (startDateTime.length() > 10) {
-                event.setStartTime(sdfDateTime.parse(startDateTime));
+//                event.setStartTime(sdfDateTime.parse(startDateTime));
             } else if (startDateTime.length() < 11 && !startDateTime.isEmpty()) {
-                event.setStartTime(sdfDateOnly.parse(startDateTime));
+//                event.setStartTime(sdfDateOnly.parse(startDateTime));
             }
         } catch (JSONException e) {
             throw new FacebookException("Unable to get field start_time.", e);
-        } catch (ParseException e) {
-            throw new FacebookException("Unable to parse field start_time.", e);
+//        } catch (ParseException e) {
+//            throw new FacebookException("Unable to parse field start_time.", e);
         }
         try {
             String endDateTime = object.getString("end_time");
             if (endDateTime != null) {
-                try {
+//                try {
                     if (endDateTime.length() > 10) {
-                        event.setEndTime(sdfDateTime.parse(endDateTime));
+//                        event.setEndTime(sdfDateTime.parse(endDateTime));
                     } else if (endDateTime.length() < 11 && !endDateTime.isEmpty()) {
-                        event.setEndTime(sdfDateOnly.parse(endDateTime));
+//                        event.setEndTime(sdfDateOnly.parse(endDateTime));
                     }
-                } catch (ParseException e) {
-                    throw new FacebookException("Unable to parse field end_time.", e);
-                }
+//                } catch (ParseException e) {
+//                    throw new FacebookException("Unable to parse field end_time.", e);
+//                }
             }
         } catch (JSONException e) {
             throw new FacebookException("Unable to get field end_time.", e);
@@ -164,14 +165,17 @@ public class EventsController implements Serializable {
 
     public void rsvpEventAsAttending(String eid) throws FacebookException {
         facebook.rsvpEventAsAttending(eid);
+        this.loadEvents();
     }
 
     public void rsvpEventAsDeclined(String eid) throws FacebookException {
         facebook.rsvpEventAsDeclined(eid);
+        this.loadEvents();
     }
 
     public void rsvpEventAsMaybe(String eid) throws FacebookException {
         facebook.rsvpEventAsMaybe(eid);
+        this.loadEvents();
     }
 
     public void saveOrUpdateEvent() throws FacebookException {
@@ -183,10 +187,10 @@ public class EventsController implements Serializable {
         eventUpdate.setPrivacyType(event.getPrivacyType());
 
         Calendar cal = Calendar.getInstance();
-        cal.setTime(event.getStartTime());
+//        cal.setTime(event.getStartTime());
         eventUpdate.setStartTime(cal);
         cal = Calendar.getInstance();
-        cal.setTime(event.getEndTime());
+//        cal.setTime(event.getEndTime());
         eventUpdate.setEndTime(cal);
 
         if (event.getEid() == null) {
@@ -196,21 +200,12 @@ public class EventsController implements Serializable {
         }
 
         event = new Event();
-
-        try {
-            loadEvents();
-        } catch (JSONException e) {
-            throw new FacebookException("Unable to load events.", e);
-        }
+        loadEvents();
     }
 
     public void deleteEvent(String eid) throws FacebookException {
         facebook.deleteEvent(eid);
-        try {
-            loadEvents();
-        } catch (JSONException e) {
-            throw new FacebookException("Unable to load events.", e);
-        }
+        loadEvents();
     }
 
     public void reset() {
@@ -226,17 +221,26 @@ public class EventsController implements Serializable {
         return false;
     }
 
+    /**
+     * Autocomplete does not work, dont know why, it gives empty search string
+     *
+     * @param query
+     * @return
+     * @throws FacebookException
+     */
     @SuppressWarnings("unchecked")
     public List<String> complete(String query) throws FacebookException {
         List<String> results = new ArrayList<String>();
 
-        ResponseList<Place> places = facebook.searchPlaces(query);
-        results.addAll(CollectionUtils.collect(places, new Transformer() {
-            @Override
-            public Object transform(Object o) {
-                return ((Place) o).getName();
-            }
-        }));
+        if (query != null) {
+            ResponseList<Place> places = facebook.searchPlaces(query);
+            results.addAll(CollectionUtils.collect(places, new Transformer() {
+                @Override
+                public Object transform(Object o) {
+                    return ((Place) o).getName();
+                }
+            }));
+        }
 
         return results;
     }
@@ -248,8 +252,8 @@ public class EventsController implements Serializable {
         event.setName(e.getName());
         event.setDescription(e.getDescription());
         event.setLocation(e.getLocation());
-        event.setStartTime(e.getStartTime());
-        event.setEndTime(e.getEndTime());
+//        event.setStartTime(e.getStartTime());
+//        event.setEndTime(e.getEndTime());
         event.setPrivacyType(e.getPrivacy());
     }
 

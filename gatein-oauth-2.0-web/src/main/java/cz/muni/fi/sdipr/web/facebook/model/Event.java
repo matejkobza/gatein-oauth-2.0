@@ -2,8 +2,6 @@ package cz.muni.fi.sdipr.web.facebook.model;
 
 import facebook4j.EventPrivacyType;
 
-import java.util.Date;
-
 /**
  * Created with IntelliJ IDEA.
  * User: matejkobza
@@ -18,8 +16,8 @@ public class Event {
     private EventPrivacyType privacyType;
     private String location;
     private EventStatus status;
-    private Date startTime;
-    private Date endTime;
+    private String startTime;
+    private String endTime;
 
     public String getEid() {
         return eid;
@@ -69,19 +67,19 @@ public class Event {
         this.location = location;
     }
 
-    public Date getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 }
