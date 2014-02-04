@@ -23,3 +23,6 @@ RedHat GateIn demo portlets for OAuth 2.0 integration with Google and FaceBook
  - [x] - create portlets importable to RedHat GateIn portal
 
 This is a master diploma thesis of Bc. Matej Kobza, student at Faculty of Informatics, Masaryk University, Brno, 2013
+
+To run this project go to the gatein-oauth-2.0-core into
+src/main/resources/ and follow instructions in files **google.properties** and **facebook.properties**
