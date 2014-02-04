@@ -23,3 +23,13 @@ RedHat GateIn demo portlets for OAuth 2.0 integration with Google and FaceBook
  - [x] - create portlets importable to RedHat GateIn portal
 
 This is a master diploma thesis of Bc. Matej Kobza, student at Faculty of Informatics, Masaryk University, Brno, 2013
+
+How to run this project
+---------------
+1. To run this project go to the gatein-oauth-2.0-core into
+src/main/resources/ and follow instructions in files **google.properties** and **facebook.properties**
+2. Download GateIn portal from http://www.jboss.org/gatein/download
+3. Start standalone GateIn Portal http://www.jboss.org/jdf/quickstarts/jboss-as-quickstart/jpp-quickstarts/gatein-sample-portal/
+4. Build main project gatein-oauth-2.0-master by running mvn install
+5. Go to gatein-oauth-2.0-master/gatein-oauth-2.0-web/target and copy oauth-2-gtn-web-1.0.0-snapshot.war
+6. Copy the war into JBOSS_HOME/standalone/deployments/

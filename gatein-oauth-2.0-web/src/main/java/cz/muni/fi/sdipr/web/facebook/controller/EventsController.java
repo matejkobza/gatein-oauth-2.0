@@ -212,6 +212,7 @@ public class EventsController implements Serializable {
         event = new Event();
     }
 
+
     public boolean isUserEvent(Event e) {
         for (Event event : userEvents) {
             if (event.getEid().equals(e.getEid())) {
