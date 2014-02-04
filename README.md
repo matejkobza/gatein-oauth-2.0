@@ -31,5 +31,5 @@ src/main/resources/ and follow instructions in files **google.properties** and *
 2. Download GateIn portal from http://www.jboss.org/gatein/download
 3. Start standalone GateIn Portal http://www.jboss.org/jdf/quickstarts/jboss-as-quickstart/jpp-quickstarts/gatein-sample-portal/
 4. Build main project gatein-oauth-2.0-master by running mvn install
-5. Go to gatein-oauth-2.0-master -> gatein-oauth-2.0-web -> target and copy oauth-2-gtn-web-1.0.0-snapshot.war
-6. Copy the war into JBOSS_HOME/standalone/deployments
+5. Go to gatein-oauth-2.0-master/gatein-oauth-2.0-web/target and copy oauth-2-gtn-web-1.0.0-snapshot.war
+6. Copy the war into JBOSS_HOME/standalone/deployments/
