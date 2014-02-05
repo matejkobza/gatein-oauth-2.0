@@ -129,7 +129,7 @@ public class FacebookLoginServiceImpl implements Serializable, FacebookLoginServ
         }
         cf.setOAuthPermissions(strScopes.substring(0, strScopes.lastIndexOf(",")));
         System.out.println(strScopes.substring(0, strScopes.lastIndexOf(",")));
-//        unrem this in a portal environment
+//        unrem this in a portal environment| requires apache.commons.collections
 //        cf.setOAuthPermissions(StringUtils.join(scopes, ","));
 
         facebook = new FacebookFactory(cf.build()).getInstance();
