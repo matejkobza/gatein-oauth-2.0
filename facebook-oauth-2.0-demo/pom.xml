@@ -5,9 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>facebook-oauth-2.0-demo</artifactId>
-    <groupId>cz.muni.fi.sdipr</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <name>Facebook OAuth 2.0 demo</name>
     <packaging>war</packaging>
+
+    <parent>
+        <groupId>cz.muni.fi.sdipr</groupId>
+        <artifactId>oauth-2-gtn-demo</artifactId>
+        <version>1.0.0-snapshot</version>
+    </parent>
 
     <dependencies>
         <dependency>
